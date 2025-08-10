@@ -31,6 +31,7 @@ export async function suggestStyle(input: StyleSuggestionInput): Promise<StyleSu
 const prompt = ai.definePrompt({
   name: 'suggestStylePrompt',
   input: {schema: StyleSuggestionInputSchema},
+  output: {schema: StyleSuggestionOutputSchema},
   prompt: `You are a creative assistant helping users explore artistic styles for image generation.
 
   Given the following base prompt: "{{basePrompt}}", suggest a list of 10 diverse and interesting artistic styles that would be suitable for generating images from this prompt.
@@ -52,7 +53,7 @@ const suggestStyleFlow = ai.defineFlow(
             schema: StyleSuggestionOutputSchema
         },
         auth: {
-            apiKey: getNextKey(),
+            apiKey: await getNextKey(),
         }
     });
     return output!;

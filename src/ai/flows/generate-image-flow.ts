@@ -28,7 +28,16 @@ const GenerateImageOutputSchema = z.object({
 export type GenerateImageOutput = z.infer<typeof GenerateImageOutputSchema>;
 
 export async function generateImage(input: GenerateImageInput): Promise<GenerateImageOutput> {
-  return generateImageFlow(input);
+  let finalPromptText = input.prompt;
+  if (input.upscale) {
+    try {
+      const { upscaledPrompt } = await upscalePrompt({ prompt: input.prompt });
+      finalPromptText = upscaledPrompt;
+    } catch (e) {
+      console.error('Error upscaling prompt, falling back to original prompt', e);
+    }
+  }
+  return generateImageFlow({...input, prompt: finalPromptText});
 }
 
 const qualityPrompts = {
@@ -43,18 +52,12 @@ const generateImageFlow = ai.defineFlow(
     inputSchema: GenerateImageInputSchema,
     outputSchema: GenerateImageOutputSchema,
   },
-  async ({prompt, style, quality = 'High', upscale = false}) => {
+  async ({prompt, style, quality = 'High'}) => {
     
-    let finalPromptText = prompt;
-    if (upscale) {
-      const { upscaledPrompt } = await upscalePrompt({ prompt });
-      finalPromptText = upscaledPrompt;
-    }
-
     const qualityPrompt = qualityPrompts[quality as keyof typeof qualityPrompts] || qualityPrompts.High;
     const finalPrompt = `${qualityPrompt}
       Style: ${style}.
-      Prompt: ${finalPromptText}.
+      Prompt: ${prompt}.
     `;
     
     const {media} = await ai.generate({
@@ -64,7 +67,7 @@ const generateImageFlow = ai.defineFlow(
         responseModalities: ['TEXT', 'IMAGE'],
       },
       auth: {
-        apiKey: getNextKey(),
+        apiKey: await getNextKey(),
       }
     });
 

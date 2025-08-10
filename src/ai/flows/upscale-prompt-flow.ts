@@ -54,7 +54,7 @@ const upscalePromptFlow = ai.defineFlow(
             schema: UpscalePromptOutputSchema
         },
         auth: {
-            apiKey: getNextKey(),
+            apiKey: await getNextKey(),
         }
     });
     return output!;

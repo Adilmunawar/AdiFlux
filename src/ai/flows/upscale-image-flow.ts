@@ -47,7 +47,7 @@ const upscaleImageFlow = ai.defineFlow(
         responseModalities: ['TEXT', 'IMAGE'],
       },
       auth: {
-        apiKey: getNextKey(),
+        apiKey: await getNextKey(),
       }
     });
 
