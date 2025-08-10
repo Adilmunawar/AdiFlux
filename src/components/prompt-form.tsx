@@ -4,7 +4,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Wand2, Loader2, Sparkles, Upload, Image as ImageIcon } from 'lucide-react';
+import { Wand2, Loader2, Sparkles, Upload } from 'lucide-react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';

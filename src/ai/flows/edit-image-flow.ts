@@ -12,7 +12,6 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
-import { genkit } from 'genkit';
 
 const EditImageInputSchema = z.object({
   prompt: z.string().describe('The text prompt describing the desired edits.'),
@@ -29,25 +28,6 @@ export async function editImage(input: EditImageInput): Promise<EditImageOutput>
   return editImageFlow(input);
 }
 
-// Simple round-robin for API keys
-let apiKeyIndex = 0;
-const apiKeys = [
-  'AIzaSyBE-SkmQO-yqDyn51HaenX8Xw3BCLjCcM0',
-  'AIzaSyC_cnrlsxeIx7i3MjIe5rl9QFbyk0qKlgA',
-  'AIzaSyDkCxExhTKwUAASINusHXMAFDZAhsLhC40',
-  'AIzaSyCrosJpaddyi6Upxj0bnApPT-spZUh2yMs',
-  'AIzaSyBa2T4Kb2Mty6vSdoQ9NKDPCCNb6SIbFjk'
-];
-
-function getNextApiKey() {
-  if (apiKeys.length === 0) {
-    return undefined;
-  }
-  const key = apiKeys[apiKeyIndex];
-  apiKeyIndex = (apiKeyIndex + 1) % apiKeys.length;
-  return key;
-}
-
 const editImageFlow = ai.defineFlow(
   {
     name: 'editImageFlow',
@@ -60,14 +40,10 @@ const editImageFlow = ai.defineFlow(
         {media: {url: image}},
         {text: prompt},
     ];
-
-    const apiKey = getNextApiKey();
-    if (!apiKey) {
-      throw new Error('No API keys are available in the hardcoded list.');
-    }
     
+    // For simplicity, edit also uses the primary key. If needed, this could also use the pool.
     const customAI = genkit({
-      plugins: [googleAI({ apiKey })],
+        plugins: [googleAI()],
     });
 
     const {media} = await customAI.generate({

@@ -12,6 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
+import {genkit} from 'genkit';
 
 const UpscaleImageInputSchema = z.object({
   imageUrl: z.string().describe("A data URI of the image to upscale. It must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."),
