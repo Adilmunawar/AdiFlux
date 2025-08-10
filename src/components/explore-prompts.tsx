@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Wand2 } from 'lucide-react';
 
 interface ExplorePromptsProps {
-  onUsePrompt: (prompt: string) => void;
+  onUsePrompt: (prompt: string, style?: string) => void;
 }
 
 const examplePrompts = [
@@ -76,7 +76,7 @@ export function ExplorePrompts({ onUsePrompt }: ExplorePromptsProps) {
                 <CardDescription className='mb-4 text-muted-foreground/80'>
                 {item.prompt}
                 </CardDescription>
-                <Button onClick={() => onUsePrompt(item.prompt)} variant="secondary" className="w-full">
+                <Button onClick={() => onUsePrompt(item.prompt, 'Cyberpunk')} variant="secondary" className="w-full">
                   <Wand2 /> Use This Prompt
                 </Button>
             </div>
