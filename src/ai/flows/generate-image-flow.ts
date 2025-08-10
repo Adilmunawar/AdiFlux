@@ -39,11 +39,17 @@ const qualityPrompts = {
 
 // Simple round-robin for API keys
 let apiKeyIndex = 0;
+const apiKeys = [
+  'AIzaSyBE-SkmQO-yqDyn51HaenX8Xw3BCLjCcM0',
+  'AIzaSyC_cnrlsxeIx7i3MjIe5rl9QFbyk0qKlgA',
+  'AIzaSyDkCxExhTKwUAASINusHXMAFDZAhsLhC40',
+  'AIzaSyCrosJpaddyi6Upxj0bnApPT-spZUh2yMs',
+  'AIzaSyBa2T4Kb2Mty6vSdoQ9NKDPCCNb6SIbFjk'
+];
+
 function getNextApiKey() {
-  const apiKeys = process.env.GEMINI_API_KEYS?.split(',').filter(k => k.trim()) || [];
   if (apiKeys.length === 0) {
-    // Fallback to the default key if the list is empty
-    return process.env.GEMINI_API_KEY || process.env.GOOGLE_GENAI_API_KEY || process.env.GOOGLE_API_KEY;
+    return undefined;
   }
   const key = apiKeys[apiKeyIndex];
   apiKeyIndex = (apiKeyIndex + 1) % apiKeys.length;
@@ -70,7 +76,7 @@ const generateImageFlow = ai.defineFlow(
 
     const apiKey = getNextApiKey();
     if (!apiKey) {
-      throw new Error('GEMINI_API_KEYS environment variable not set or empty.');
+      throw new Error('No API keys are available in the hardcoded list.');
     }
     
     const customAI = genkit({
