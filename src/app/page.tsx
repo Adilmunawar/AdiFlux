@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { generateImage } from '@/ai/flows/generate-image-flow';
 import { ExplorePrompts } from '@/components/explore-prompts';
 import { upscaleImage } from '@/ai/flows/upscale-image-flow';
+import { editImage } from '@/ai/flows/edit-image-flow';
 
 export default function Home() {
   const [images, setImages] = useState<Image[]>([]);
@@ -61,6 +62,52 @@ export default function Home() {
     }
   };
   
+  const handleEdit = async (data: { prompt: string; image: string }) => {
+    setIsLoading(true);
+    setImages([]);
+
+    try {
+      const imagePromises = Array.from({ length: 4 }).map(() => editImage({
+        prompt: data.prompt,
+        image: data.image,
+      }));
+      const results = await Promise.allSettled(imagePromises);
+
+      const newImages: Image[] = [];
+      results.forEach((result, index) => {
+        if (result.status === 'fulfilled' && result.value.imageUrl) {
+          newImages.push({
+            id: `edit-${Date.now()}-${index}`,
+            url: result.value.imageUrl,
+            prompt: data.prompt,
+            style: 'Edited',
+            alt: `Edited image based on prompt: ${data.prompt}`,
+            hint: `edited ${data.prompt.split(' ').slice(0, 2).join(' ')}`
+          });
+        } else {
+          const errorMessage = result.status === 'rejected' ? (result.reason as Error).message : 'An unknown error occurred.';
+          toast({
+            title: 'Error Editing Image',
+            description: `An error occurred while editing one of the images: ${errorMessage}`,
+            variant: 'destructive',
+          });
+        }
+      });
+      
+      setImages(newImages);
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      toast({
+        title: 'Error Editing Images',
+        description: `Something went wrong. Please try again. ${errorMessage}`,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   const handleUsePrompt = (prompt: string, style?: string) => {
     setPrompt(prompt);
     if(style) setStyle(style);
@@ -95,6 +142,7 @@ export default function Home() {
         <aside className="lg:sticky top-20 h-fit flex flex-col gap-6">
           <PromptForm 
             onGenerate={handleGenerate} 
+            onEdit={handleEdit}
             isLoading={isLoading} 
             prompt={prompt} 
             style={style}
