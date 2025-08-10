@@ -23,12 +23,6 @@ const examplePrompts = [
     hint: 'neon arcade',
   },
   {
-    title: 'Serenity at Golden Lake',
-    prompt: 'A tranquil lake glows under the golden hour, surrounded by lush trees and distant mountains, reflecting the warm sunset.',
-    imageUrl: '/Images/0d70bae9ebd1b814092d0ce81af69873.jpg',
-    hint: 'golden lake sunset',
-  },
-  {
     title: 'Mystic Woodland Trail',
     prompt: 'A magical forest path winds through ancient trees, dappled sunlight and glowing flora creating an enchanted atmosphere.',
     imageUrl: '/Images/1f14f87cad85c101c1097b5d13994abb.jpg',
