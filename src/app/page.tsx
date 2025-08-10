@@ -39,8 +39,10 @@ export default function Home() {
             hint: `${data.prompt.split(' ').slice(0, 2).join(' ')} ${data.style}`
           });
         } else {
-           const errorMessage = result.status === 'rejected' ? (result.reason as Error).message : 'An unknown error occurred.';
-          toast({
+           // Correctly handle the error message from the rejected promise.
+           const errorMessage = result.status === 'rejected' ? String(result.reason) : 'An unknown error occurred.';
+           console.error(`Error generating image ${index + 1}:`, result.reason);
+           toast({
             title: 'Error Generating Image',
             description: `An error occurred while generating one of the images: ${errorMessage}`,
             variant: 'destructive',
@@ -52,7 +54,8 @@ export default function Home() {
 
     } catch (error) {
        const errorMessage = error instanceof Error ? error.message : String(error);
-      toast({
+       console.error('An unexpected error occurred in handleGenerate:', error);
+       toast({
         title: 'Error Generating Images',
         description: `Something went wrong. Please try again. ${errorMessage}`,
         variant: 'destructive',
@@ -93,6 +96,7 @@ export default function Home() {
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('An unexpected error occurred in handleEdit:', error);
       toast({
         title: 'Error Editing Images',
         description: `Something went wrong. Please try again. ${errorMessage}`,
@@ -122,6 +126,7 @@ export default function Home() {
       toast({ title: 'Image Upscaled!', description: 'Your enhanced image has been added to the gallery.' });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('An unexpected error occurred in handleUpscale:', error);
       toast({
         title: 'Error Upscaling Image',
         description: `Something went wrong. Please try again. ${errorMessage}`,
@@ -137,6 +142,7 @@ export default function Home() {
         toast({ title: 'Prompt Upscaled!', description: 'The prompt has been enhanced with more detail.' });
     } catch(error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error('An unexpected error occurred in handleUpscalePrompt:', error);
         toast({
             title: 'Error Upscaling Prompt',
             description: `Something went wrong. Please try again. ${errorMessage}`,
