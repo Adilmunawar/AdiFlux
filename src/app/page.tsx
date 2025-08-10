@@ -67,34 +67,28 @@ export default function Home() {
     setImages([]);
 
     try {
-      const imagePromises = Array.from({ length: 4 }).map(() => editImage({
+      const result = await editImage({
         prompt: data.prompt,
         image: data.image,
-      }));
-      const results = await Promise.allSettled(imagePromises);
-
-      const newImages: Image[] = [];
-      results.forEach((result, index) => {
-        if (result.status === 'fulfilled' && result.value.imageUrl) {
-          newImages.push({
-            id: `edit-${Date.now()}-${index}`,
-            url: result.value.imageUrl,
-            prompt: data.prompt,
-            style: 'Edited',
-            alt: `Edited image based on prompt: ${data.prompt}`,
-            hint: `edited ${data.prompt.split(' ').slice(0, 2).join(' ')}`
-          });
-        } else {
-          const errorMessage = result.status === 'rejected' ? (result.reason as Error).message : 'An unknown error occurred.';
-          toast({
-            title: 'Error Editing Image',
-            description: `An error occurred while editing one of the images: ${errorMessage}`,
-            variant: 'destructive',
-          });
-        }
       });
       
-      setImages(newImages);
+      if (result.imageUrl) {
+        const newImage: Image = {
+          id: `edit-${Date.now()}`,
+          url: result.imageUrl,
+          prompt: data.prompt,
+          style: 'Edited',
+          alt: `Edited image based on prompt: ${data.prompt}`,
+          hint: `edited ${data.prompt.split(' ').slice(0, 2).join(' ')}`
+        };
+        setImages([newImage]);
+      } else {
+        toast({
+            title: 'Error Editing Image',
+            description: 'An error occurred while editing the image.',
+            variant: 'destructive',
+          });
+      }
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
