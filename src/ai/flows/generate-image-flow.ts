@@ -13,6 +13,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { upscalePrompt } from './upscale-prompt-flow';
 import {googleAI} from '@genkit-ai/googleai';
+import {genkit} from 'genkit';
 
 const GenerateImageInputSchema = z.object({
   prompt: z.string().describe('The text prompt for image generation.'),
@@ -45,6 +46,10 @@ const generateImageFlow = ai.defineFlow(
   },
   async ({prompt, style, quality = 'High', upscale = false}) => {
     
+    const customAI = genkit({
+        plugins: [googleAI()],
+    });
+    
     // First, upscale the user's prompt to be more descriptive.
     const { upscaledPrompt } = await upscalePrompt({ prompt });
     
@@ -55,7 +60,7 @@ const generateImageFlow = ai.defineFlow(
       ${upscale ? 'The image should be upscaled to a higher resolution.' : ''}
     `;
     
-    const {media} = await ai.generate({
+    const {media} = await customAI.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
       prompt: finalPrompt,
       config: {
@@ -70,3 +75,4 @@ const generateImageFlow = ai.defineFlow(
     return {imageUrl: media.url};
   }
 );
+
