@@ -1,5 +1,6 @@
 import type {NextConfig} from 'next';
 
+// Configuration for Next.js
 const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
