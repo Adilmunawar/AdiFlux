@@ -1,4 +1,4 @@
-# **App Name**: Imagi AI
+# **App Name**: Adiflux
 
 ## Core Features:
 
