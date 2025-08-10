@@ -19,7 +19,7 @@ interface ImageGalleryProps {
   isLoading: boolean;
 }
 
-function ImageCard({ image }: { image: Image }) {
+function ImageCard({ image, index }: { image: Image; index: number }) {
   const { toast } = useToast();
 
   const handleDownload = async () => {
@@ -44,7 +44,10 @@ function ImageCard({ image }: { image: Image }) {
   };
 
   return (
-    <Card className="overflow-hidden group relative border-2 border-transparent hover:border-primary transition-all duration-300 bg-card/50">
+    <Card 
+      className="overflow-hidden group relative border-2 border-transparent hover:border-primary transition-all duration-300 bg-card/50 animate-fade-in-up"
+      style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
+    >
       <CardContent className="p-0">
         <Image
           src={image.url}
@@ -70,9 +73,12 @@ function ImageCard({ image }: { image: Image }) {
   );
 }
 
-function SkeletonCard() {
+function SkeletonCard({ index }: { index: number }) {
     return (
-      <Card className="overflow-hidden bg-card/50">
+      <Card 
+        className="overflow-hidden bg-card/50 animate-fade-in-up"
+        style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
+      >
         <CardContent className="p-0">
           <div className="aspect-square w-full bg-muted/50 animate-pulse" />
         </CardContent>
@@ -97,11 +103,11 @@ export function ImageGallery({ images, isLoading }: ImageGalleryProps) {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {images.map((image) =>
+            {images.map((image, index) =>
               image.url ? (
-                <ImageCard key={image.id} image={image} />
+                <ImageCard key={image.id} image={image} index={index} />
               ) : (
-                <SkeletonCard key={image.id} />
+                <SkeletonCard key={image.id} index={index} />
               )
             )}
           </div>

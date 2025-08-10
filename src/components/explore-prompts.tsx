@@ -56,8 +56,12 @@ export function ExplorePrompts({ onUsePrompt }: ExplorePromptsProps) {
         Explore What&apos;s Possible
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {examplePrompts.map((item) => (
-          <Card key={item.title} className="overflow-hidden group bg-card/80 backdrop-blur-sm">
+        {examplePrompts.map((item, index) => (
+          <Card 
+            key={item.title} 
+            className="overflow-hidden group bg-card/80 backdrop-blur-sm animate-fade-in-up"
+            style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'backwards' }}
+          >
             <CardContent className="p-0">
               <Image
                 src={item.imageUrl}
