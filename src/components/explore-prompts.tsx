@@ -11,6 +11,12 @@ interface ExplorePromptsProps {
 
 const examplePrompts = [
     {
+        title: 'Cybernetic Face-Off',
+        prompt: 'Two futuristic androids face each other in a tense standoff, their metallic bodies illuminated by vibrant pink and blue neon lights in a dark, high-tech cityscape.',
+        imageUrl: 'https://storage.googleapis.com/gemini-studio-assets/explore/cybernetic_faceoff.jpg',
+        hint: 'cybernetic standoff',
+    },
+    {
         title: 'Ancient Oasis',
         prompt: 'A serene oasis at the foot of the great pyramids, with a grand temple entrance and lush palm trees reflecting in the calm, turquoise water.',
         imageUrl: 'https://storage.googleapis.com/gemini-studio-assets/explore/ancient_oasis.jpg',
@@ -39,12 +45,6 @@ const examplePrompts = [
         prompt: 'An majestic castle floating high in the clouds, with waterfalls cascading down its sides into the endless sky below.',
         imageUrl: 'https://storage.googleapis.com/gemini-studio-assets/explore/sky_castle.jpg',
         hint: 'sky castle',
-    },
-    {
-        title: 'Gothic Library',
-        prompt: 'A grand, ancient library with towering shelves of books, intricate gothic architecture, and long, dramatic shadows cast by candlelight.',
-        imageUrl: 'https://storage.googleapis.com/gemini-studio-assets/explore/gothic_library.jpg',
-        hint: 'gothic library',
     },
 ];
 
