@@ -11,10 +11,10 @@ interface ExplorePromptsProps {
 
 const examplePrompts = [
     {
-        title: 'Bioluminescent Forest',
-        prompt: 'A mystical forest at midnight, filled with glowing, bioluminescent mushrooms and ethereal sprites dancing among ancient trees.',
-        imageUrl: 'https://storage.googleapis.com/gemini-studio-assets/explore/bioluminescent_forest.jpg',
-        hint: 'bioluminescent forest',
+        title: 'Ancient Oasis',
+        prompt: 'A serene oasis at the foot of the great pyramids, with a grand temple entrance and lush palm trees reflecting in the calm, turquoise water.',
+        imageUrl: 'https://storage.googleapis.com/gemini-studio-assets/explore/ancient_oasis.jpg',
+        hint: 'ancient oasis',
     },
     {
         title: 'Solar Punk Utopia',
