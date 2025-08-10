@@ -24,7 +24,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { upscalePrompt } from '@/ai/flows/upscale-prompt-flow';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
@@ -41,6 +41,10 @@ export type FormValues = z.infer<typeof formSchema>;
 interface PromptFormProps {
   onGenerate: (values: FormValues) => void;
   isLoading: boolean;
+  prompt: string;
+  style: string;
+  setPrompt: (prompt: string) => void;
+  setStyle: (style: string) => void;
 }
 
 const artisticStyles = [
@@ -56,16 +60,24 @@ const artisticStyles = [
   'Watercolor',
 ];
 
-export function PromptForm({ onGenerate, isLoading }: PromptFormProps) {
+export function PromptForm({ onGenerate, isLoading, prompt, style, setPrompt, setStyle }: PromptFormProps) {
   const [isUpscaling, setIsUpscaling] = useState(false);
   const { toast } = useToast();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      prompt: '',
-      style: 'Photorealistic',
+    values: {
+      prompt: prompt,
+      style: style,
     },
   });
+
+  useEffect(() => {
+    form.setValue('prompt', prompt);
+  }, [prompt, form]);
+
+  useEffect(() => {
+    form.setValue('style', style);
+  }, [style, form]);
 
   const handleUpscale = async () => {
     const currentPrompt = form.getValues('prompt');
@@ -82,6 +94,7 @@ export function PromptForm({ onGenerate, isLoading }: PromptFormProps) {
     try {
       const result = await upscalePrompt({ prompt: currentPrompt });
       form.setValue('prompt', result.upscaledPrompt, { shouldValidate: true });
+      setPrompt(result.upscaledPrompt);
     } catch (error) {
       toast({
         title: 'Error Upscaling Prompt',
@@ -92,6 +105,12 @@ export function PromptForm({ onGenerate, isLoading }: PromptFormProps) {
       setIsUpscaling(false);
     }
   };
+  
+  const onSubmit = (data: FormValues) => {
+    setPrompt(data.prompt);
+    setStyle(data.style);
+    onGenerate(data);
+  };
 
   return (
     <Card>
@@ -101,7 +120,7 @@ export function PromptForm({ onGenerate, isLoading }: PromptFormProps) {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onGenerate)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="prompt"
@@ -126,7 +145,7 @@ export function PromptForm({ onGenerate, isLoading }: PromptFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Artistic Style</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a style" />
