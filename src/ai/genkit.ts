@@ -8,5 +8,4 @@ export const ai = genkit({
     googleAI(),
   ],
   logLevel: 'debug',
-  model: 'googleai/gemini-pro',
 });
