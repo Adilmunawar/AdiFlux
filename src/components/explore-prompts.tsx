@@ -9,7 +9,6 @@ import Image from 'next/image';
 interface ExplorePromptsProps {
   onUsePrompt: (prompt: string, style?: string) => void;
 }
-
 const examplePrompts = [
   {
     title: 'Neon City Reflections',
