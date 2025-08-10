@@ -4,6 +4,7 @@
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Wand2 } from 'lucide-react';
+import Image from 'next/image';
 
 interface ExplorePromptsProps {
   onUsePrompt: (prompt: string, style?: string) => void;
@@ -13,37 +14,37 @@ const examplePrompts = [
     {
         title: 'Cybernetic Face-Off',
         prompt: 'Two futuristic androids face each other in a tense standoff, their metallic bodies illuminated by vibrant pink and blue neon lights in a dark, high-tech cityscape.',
-        imageUrl: 'https://placehold.co/600x400.png',
+        imageUrl: '/images/explore/cybernetic-face-off.png',
         hint: 'cybernetic standoff',
     },
     {
         title: 'Ancient Oasis',
         prompt: 'A serene oasis at the foot of the great pyramids, with a grand temple entrance and lush palm trees reflecting in the calm, turquoise water.',
-        imageUrl: 'https://placehold.co/600x400.png',
+        imageUrl: '/images/explore/ancient-oasis.png',
         hint: 'ancient oasis',
     },
     {
         title: 'Solar Punk Utopia',
         prompt: 'A futuristic eco-city where nature and technology coexist in harmony, with buildings covered in lush greenery and powered by solar panels.',
-        imageUrl: 'https://placehold.co/600x400.png',
+        imageUrl: '/images/explore/solarpunk-utopia.png',
         hint: 'solarpunk utopia',
     },
     {
         title: 'Interstellar Nebula',
         prompt: 'A breathtaking view of a colorful interstellar gas cloud, with newborn stars igniting within its swirling cosmic dust.',
-        imageUrl: 'https://placehold.co/600x400.png',
+        imageUrl: '/images/explore/interstellar-nebula.png',
         hint: 'interstellar nebula',
     },
     {
         title: 'Crystal Desert',
         prompt: 'A vast desert landscape at sunset, where giant, shimmering crystals erupt from the sandy dunes, catching the last rays of light.',
-        imageUrl: 'https://placehold.co/600x400.png',
+        imageUrl: '/images/explore/crystal-desert.png',
         hint: 'crystal desert',
     },
     {
         title: 'Floating Sky Castle',
         prompt: 'An majestic castle floating high in the clouds, with waterfalls cascading down its sides into the endless sky below.',
-        imageUrl: 'https://placehold.co/600x400.png',
+        imageUrl: '/images/explore/sky-castle.png',
         hint: 'sky castle',
     },
 ];
@@ -62,7 +63,7 @@ export function ExplorePrompts({ onUsePrompt }: ExplorePromptsProps) {
             style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'backwards' }}
           >
             <CardContent className="p-0">
-              <img
+              <Image
                 src={item.imageUrl}
                 alt={item.title}
                 width={600}
