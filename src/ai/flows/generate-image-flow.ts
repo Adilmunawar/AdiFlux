@@ -46,10 +46,6 @@ const generateImageFlow = ai.defineFlow(
   },
   async ({prompt, style, quality = 'High', upscale = false}) => {
     
-    const customAI = genkit({
-        plugins: [googleAI()],
-    });
-    
     // First, upscale the user's prompt to be more descriptive.
     const { upscaledPrompt } = await upscalePrompt({ prompt });
     
@@ -59,6 +55,10 @@ const generateImageFlow = ai.defineFlow(
       Prompt: ${upscaledPrompt}.
       ${upscale ? 'The image should be upscaled to a higher resolution.' : ''}
     `;
+    
+    const customAI = genkit({
+        plugins: [googleAI()],
+    });
     
     const {media} = await customAI.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
