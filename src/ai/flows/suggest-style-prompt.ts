@@ -12,6 +12,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { getNextKey } from '../keys';
 
 const StyleSuggestionInputSchema = z.object({
   basePrompt: z.string().describe('The base prompt for image generation.'),
@@ -30,7 +31,6 @@ export async function suggestStyle(input: StyleSuggestionInput): Promise<StyleSu
 const prompt = ai.definePrompt({
   name: 'suggestStylePrompt',
   input: {schema: StyleSuggestionInputSchema},
-  output: {schema: StyleSuggestionOutputSchema},
   prompt: `You are a creative assistant helping users explore artistic styles for image generation.
 
   Given the following base prompt: "{{basePrompt}}", suggest a list of 10 diverse and interesting artistic styles that would be suitable for generating images from this prompt.
@@ -50,6 +50,9 @@ const suggestStyleFlow = ai.defineFlow(
         model: 'googleai/gemini-pro',
         output: {
             schema: StyleSuggestionOutputSchema
+        },
+        auth: {
+            apiKey: getNextKey(),
         }
     });
     return output!;

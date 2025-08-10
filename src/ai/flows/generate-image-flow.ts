@@ -11,6 +11,8 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { upscalePrompt } from './upscale-prompt-flow';
+import { getNextKey } from '../keys';
 
 const GenerateImageInputSchema = z.object({
   prompt: z.string().describe('The text prompt for image generation.'),
@@ -42,11 +44,17 @@ const generateImageFlow = ai.defineFlow(
     outputSchema: GenerateImageOutputSchema,
   },
   async ({prompt, style, quality = 'High', upscale = false}) => {
+    
+    let finalPromptText = prompt;
+    if (upscale) {
+      const { upscaledPrompt } = await upscalePrompt({ prompt });
+      finalPromptText = upscaledPrompt;
+    }
+
     const qualityPrompt = qualityPrompts[quality as keyof typeof qualityPrompts] || qualityPrompts.High;
     const finalPrompt = `${qualityPrompt}
       Style: ${style}.
-      Prompt: ${prompt}.
-      ${upscale ? 'The image should be upscaled to a higher resolution.' : ''}
+      Prompt: ${finalPromptText}.
     `;
     
     const {media} = await ai.generate({
@@ -55,6 +63,9 @@ const generateImageFlow = ai.defineFlow(
       config: {
         responseModalities: ['TEXT', 'IMAGE'],
       },
+      auth: {
+        apiKey: getNextKey(),
+      }
     });
 
     if (!media || !media.url) {

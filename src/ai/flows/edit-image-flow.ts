@@ -11,6 +11,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { getNextKey } from '../keys';
 
 const EditImageInputSchema = z.object({
   prompt: z.string().describe('The text prompt describing the desired edits.'),
@@ -46,6 +47,9 @@ const editImageFlow = ai.defineFlow(
       config: {
         responseModalities: ['TEXT', 'IMAGE'],
       },
+      auth: {
+        apiKey: getNextKey(),
+      }
     });
 
     if (!media || !media.url) {
