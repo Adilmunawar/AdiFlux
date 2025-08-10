@@ -27,7 +27,8 @@ const GenerateImageOutputSchema = z.object({
 export type GenerateImageOutput = z.infer<typeof GenerateImageOutputSchema>;
 
 export async function generateImage(input: GenerateImageInput): Promise<GenerateImageOutput> {
-  return generateImageFlow(input);
+  const { upscaledPrompt } = await upscalePrompt({ prompt: input.prompt });
+  return generateImageFlow({...input, prompt: upscaledPrompt});
 }
 
 const qualityPrompts = {
@@ -43,14 +44,10 @@ const generateImageFlow = ai.defineFlow(
     outputSchema: GenerateImageOutputSchema,
   },
   async ({prompt, style, quality = 'High', upscale = false}) => {
-    
-    // First, upscale the user's prompt to be more descriptive.
-    const { upscaledPrompt } = await upscalePrompt({ prompt });
-    
     const qualityPrompt = qualityPrompts[quality as keyof typeof qualityPrompts] || qualityPrompts.High;
     const finalPrompt = `${qualityPrompt}
       Style: ${style}.
-      Prompt: ${upscaledPrompt}.
+      Prompt: ${prompt}.
       ${upscale ? 'The image should be upscaled to a higher resolution.' : ''}
     `;
     
