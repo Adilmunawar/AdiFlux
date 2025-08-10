@@ -14,6 +14,8 @@ import {z} from 'genkit';
 const GenerateImageInputSchema = z.object({
   prompt: z.string().describe('The text prompt for image generation.'),
   style: z.string().describe('The artistic style for the image.'),
+  quality: z.string().optional().describe('The desired quality of the image (e.g., "Standard", "High", "Ultra").'),
+  upscale: z.boolean().optional().describe('Whether to upscale the generated image.'),
 });
 export type GenerateImageInput = z.infer<typeof GenerateImageInputSchema>;
 
@@ -26,19 +28,30 @@ export async function generateImage(input: GenerateImageInput): Promise<Generate
   return generateImageFlow(input);
 }
 
+const qualityPrompts = {
+  Standard: 'A good quality image.',
+  High: 'A high-quality, detailed image.',
+  Ultra: 'A masterpiece image with hyper-detailed, photorealistic, and cinematic qualities. Emphasize intricate details, professional lighting, and advanced rendering techniques for a breathtaking and visually stunning result. The art direction should be at a professional level, 8k resolution.',
+};
+
 const generateImageFlow = ai.defineFlow(
   {
     name: 'generateImageFlow',
     inputSchema: GenerateImageInputSchema,
     outputSchema: GenerateImageOutputSchema,
   },
-  async ({prompt, style}) => {
-    const {media} = await ai.generate({
-      model: 'googleai/gemini-2.0-flash-preview-image-generation',
-      prompt: `Create a masterpiece image with hyper-detailed, photorealistic, and cinematic qualities.
+  async ({prompt, style, quality = 'High', upscale = false}) => {
+    
+    const qualityPrompt = qualityPrompts[quality as keyof typeof qualityPrompts] || qualityPrompts.High;
+    const finalPrompt = `${qualityPrompt}
       Style: ${style}.
       Prompt: ${prompt}.
-      Emphasize intricate details, professional lighting, and advanced rendering techniques for a breathtaking and visually stunning result. The art direction should be at a professional level.`,
+      ${upscale ? 'The image should be upscaled to a higher resolution.' : ''}
+    `;
+    
+    const {media} = await ai.generate({
+      model: 'googleai/gemini-2.0-flash-preview-image-generation',
+      prompt: finalPrompt,
       config: {
         responseModalities: ['TEXT', 'IMAGE'],
       },

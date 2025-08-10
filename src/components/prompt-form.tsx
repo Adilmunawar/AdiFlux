@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,6 +27,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { upscalePrompt } from '@/ai/flows/upscale-prompt-flow';
 import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { Switch } from '@/components/ui/switch';
 
 const formSchema = z.object({
   prompt: z.string().min(10, {
@@ -34,6 +36,8 @@ const formSchema = z.object({
   style: z.string({
     required_error: 'Please select an artistic style.',
   }),
+  quality: z.string().default('High'),
+  upscale: z.boolean().default(false),
 });
 
 export type FormValues = z.infer<typeof formSchema>;
@@ -68,6 +72,8 @@ export function PromptForm({ onGenerate, isLoading, prompt, style, setPrompt, se
     values: {
       prompt: prompt,
       style: style,
+      quality: 'High',
+      upscale: false,
     },
   });
 
@@ -160,6 +166,48 @@ export function PromptForm({ onGenerate, isLoading, prompt, style, setPrompt, se
                     </SelectContent>
                   </Select>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="quality"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Quality</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select image quality" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Standard">Standard</SelectItem>
+                      <SelectItem value="High">High</SelectItem>
+                      <SelectItem value="Ultra">Ultra</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="upscale"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm bg-background/50">
+                  <div className="space-y-0.5">
+                    <FormLabel>Upscale Image</FormLabel>
+                    <FormDescription>
+                      Increase image resolution and detail. May take longer.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />
