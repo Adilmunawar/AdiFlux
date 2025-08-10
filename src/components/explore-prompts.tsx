@@ -1,7 +1,6 @@
 
 'use client';
 
-import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Wand2 } from 'lucide-react';
@@ -63,7 +62,7 @@ export function ExplorePrompts({ onUsePrompt }: ExplorePromptsProps) {
             style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'backwards' }}
           >
             <CardContent className="p-0">
-              <Image
+              <img
                 src={item.imageUrl}
                 alt={item.title}
                 width={600}
