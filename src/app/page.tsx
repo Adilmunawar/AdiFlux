@@ -18,7 +18,7 @@ export default function Home() {
   const handleGenerate = async (data: FormValues) => {
     setIsLoading(true);
     const placeholderImages: Image[] = Array.from({ length: 4 }).map((_, i) => ({
-      id: `placeholder-${i}`,
+      id: `placeholder-${Date.now()}-${i}`,
       url: '',
       alt: 'loading image',
       hint: '',
@@ -45,13 +45,12 @@ export default function Home() {
             description: `An error occurred while generating one of the images.`,
             variant: 'destructive',
           });
+          // Replace placeholder with a failed state or remove it
+          setImages(prev => prev.filter(img => img.id !== `placeholder-${Date.now()}-${index}`));
         }
       });
       
-      setImages(prevImages => {
-        const updatedImages = [...prevImages.filter(img => img.url)];
-        return [...updatedImages, ...newImages].slice(0, 4);
-      });
+      setImages(newImages);
 
     } catch (error) {
       toast({
@@ -67,7 +66,7 @@ export default function Home() {
   
   const handleUsePrompt = (prompt: string) => {
     setPrompt(prompt);
-  }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
