@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Wand2, Loader2 } from 'lucide-react';
+import { Wand2, Loader2, Sparkles } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -23,6 +23,9 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { upscalePrompt } from '@/ai/flows/upscale-prompt-flow';
+import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   prompt: z.string().min(10, {
@@ -54,6 +57,8 @@ const artisticStyles = [
 ];
 
 export function PromptForm({ onGenerate, isLoading }: PromptFormProps) {
+  const [isUpscaling, setIsUpscaling] = useState(false);
+  const { toast } = useToast();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,6 +66,32 @@ export function PromptForm({ onGenerate, isLoading }: PromptFormProps) {
       style: 'Photorealistic',
     },
   });
+
+  const handleUpscale = async () => {
+    const currentPrompt = form.getValues('prompt');
+    if (!currentPrompt) {
+      toast({
+        title: 'Prompt is empty',
+        description: 'Please enter a prompt to upscale.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsUpscaling(true);
+    try {
+      const result = await upscalePrompt({ prompt: currentPrompt });
+      form.setValue('prompt', result.upscaledPrompt, { shouldValidate: true });
+    } catch (error) {
+      toast({
+        title: 'Error Upscaling Prompt',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsUpscaling(false);
+    }
+  };
 
   return (
     <Card>
@@ -113,19 +144,34 @@ export function PromptForm({ onGenerate, isLoading }: PromptFormProps) {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <Wand2 className="mr-2 h-4 w-4" />
-                  Generate
-                </>
-              )}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button type="button" variant="outline" onClick={handleUpscale} disabled={isUpscaling || isLoading} className="flex-1">
+                {isUpscaling ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Upscaling...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Upscale
+                  </>
+                )}
+              </Button>
+              <Button type="submit" disabled={isLoading || isUpscaling} className="w-full flex-1">
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="mr-2 h-4 w-4" />
+                    Generate
+                  </>
+                )}
+              </Button>
+            </div>
           </form>
         </Form>
       </CardContent>
