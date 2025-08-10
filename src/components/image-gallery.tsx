@@ -75,6 +75,16 @@ function ImageCard({ image }: { image: Image }) {
   );
 }
 
+function SkeletonCard() {
+    return (
+      <Card className="overflow-hidden">
+        <CardContent className="p-0">
+          <div className="aspect-square w-full bg-muted animate-pulse" />
+        </CardContent>
+      </Card>
+    );
+  }
+
 export function ImageGallery({ images, isLoading }: ImageGalleryProps) {
   const showEmptyState = !isLoading && images.length === 0;
 
@@ -98,7 +108,7 @@ export function ImageGallery({ images, isLoading }: ImageGalleryProps) {
             <ImageCard key={image.id} image={image} />
           ))}
           {isLoading && Array.from({ length: Math.max(0, 4 - images.length) }).map((_, i) => (
-            <Skeleton key={`skeleton-${i}`} className="aspect-square w-full rounded-xl" />
+            <SkeletonCard key={`skeleton-${i}`} />
           ))}
         </div>
       )}
