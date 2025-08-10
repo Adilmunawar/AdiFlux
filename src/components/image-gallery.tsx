@@ -2,7 +2,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Download, Expand } from 'lucide-react';
+import { Download, Expand, ImageIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -114,7 +114,7 @@ export function ImageGallery({ images, isLoading, onUpscale, onUsePrompt }: Imag
         {showEmptyState ? (
            <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/30 h-full min-h-[400px] text-center p-8 bg-card/30">
               <div className="bg-muted/50 rounded-full p-4">
-                <Image className="w-12 h-12 text-muted-foreground" />
+                <ImageIcon className="w-12 h-12 text-muted-foreground" />
               </div>
               <h2 className="mt-6 text-2xl font-semibold">Your creations will appear here</h2>
               <p className="mt-2 text-muted-foreground">
