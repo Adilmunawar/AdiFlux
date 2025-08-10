@@ -113,7 +113,7 @@ export function PromptForm({ onGenerate, isLoading, prompt, style, setPrompt, se
   };
 
   return (
-    <Card>
+    <Card className="bg-card/80 backdrop-blur-sm">
       <CardHeader>
         <CardTitle>Create Your Vision</CardTitle>
         <CardDescription>Describe what you want to see and select an artistic style.</CardDescription>
@@ -173,7 +173,7 @@ export function PromptForm({ onGenerate, isLoading, prompt, style, setPrompt, se
                 ) : (
                   <>
                     <Sparkles className="mr-2 h-4 w-4" />
-                    Upscale
+                    Upscale Prompt
                   </>
                 )}
               </Button>

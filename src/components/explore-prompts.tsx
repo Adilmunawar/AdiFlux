@@ -4,6 +4,7 @@
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Wand2 } from 'lucide-react';
 
 interface ExplorePromptsProps {
   onUsePrompt: (prompt: string) => void;
@@ -56,7 +57,7 @@ export function ExplorePrompts({ onUsePrompt }: ExplorePromptsProps) {
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {examplePrompts.map((item) => (
-          <Card key={item.title} className="overflow-hidden group">
+          <Card key={item.title} className="overflow-hidden group bg-card/80 backdrop-blur-sm">
             <CardContent className="p-0">
               <Image
                 src={item.imageUrl}
@@ -69,11 +70,11 @@ export function ExplorePrompts({ onUsePrompt }: ExplorePromptsProps) {
             </CardContent>
             <div className='p-4'>
                 <CardTitle className="text-xl mb-2 text-foreground">{item.title}</CardTitle>
-                <CardDescription className='mb-4'>
+                <CardDescription className='mb-4 text-muted-foreground/80'>
                 {item.prompt}
                 </CardDescription>
-                <Button onClick={() => onUsePrompt(item.prompt)} className="w-full">
-                Use This Prompt
+                <Button onClick={() => onUsePrompt(item.prompt)} variant="secondary" className="w-full">
+                  <Wand2 /> Use This Prompt
                 </Button>
             </div>
           </Card>

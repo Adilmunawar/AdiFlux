@@ -34,10 +34,6 @@ function ImageCard({ image }: { image: Image }) {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
-      toast({
-        title: 'Download Started',
-        description: 'Your image is being downloaded.',
-      });
     } catch (error) {
       toast({
         title: 'Download Failed',
@@ -48,7 +44,7 @@ function ImageCard({ image }: { image: Image }) {
   };
 
   return (
-    <Card className="overflow-hidden group relative border-2 border-transparent hover:border-primary transition-all duration-300">
+    <Card className="overflow-hidden group relative border-2 border-transparent hover:border-primary transition-all duration-300 bg-card/50">
       <CardContent className="p-0">
         <Image
           src={image.url}
@@ -58,13 +54,13 @@ function ImageCard({ image }: { image: Image }) {
           className="aspect-square object-cover w-full transition-transform duration-300 group-hover:scale-105"
           data-ai-hint={image.hint}
         />
-        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
           <Button
             variant="secondary"
             size="icon"
             onClick={handleDownload}
             aria-label="Download image"
-            className="bg-primary/80 hover:bg-primary text-primary-foreground scale-90 group-hover:scale-100 transition-transform duration-300"
+            className="bg-background/50 hover:bg-background/80 text-foreground scale-90 group-hover:scale-100 transition-transform duration-300"
           >
             <Download className="h-5 w-5" />
           </Button>
@@ -76,9 +72,9 @@ function ImageCard({ image }: { image: Image }) {
 
 function SkeletonCard() {
     return (
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden bg-card/50">
         <CardContent className="p-0">
-          <div className="aspect-square w-full bg-muted animate-pulse" />
+          <div className="aspect-square w-full bg-muted/50 animate-pulse" />
         </CardContent>
       </Card>
     );
@@ -86,18 +82,17 @@ function SkeletonCard() {
 
 export function ImageGallery({ images, isLoading }: ImageGalleryProps) {
     const showEmptyState = !isLoading && images.length === 0;
-    const isGenerating = isLoading || images.some(img => !img.url);
   
     return (
       <div>
         {showEmptyState ? (
-           <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/30 h-full min-h-[400px] text-center p-8">
-              <div className="bg-muted rounded-full p-4">
+           <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/30 h-full min-h-[400px] text-center p-8 bg-card/30">
+              <div className="bg-muted/50 rounded-full p-4">
               <ImageIcon className="w-12 h-12 text-muted-foreground" />
               </div>
-              <h2 className="mt-6 text-2xl font-semibold">Your creations appear here</h2>
+              <h2 className="mt-6 text-2xl font-semibold">Your creations will appear here</h2>
               <p className="mt-2 text-muted-foreground">
-              Enter a prompt and select a style to start generating images with AI.
+              Enter a prompt and select a style to start generating images.
               </p>
           </div>
         ) : (
