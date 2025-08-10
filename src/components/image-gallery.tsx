@@ -76,37 +76,32 @@ function ImageCard({ image }: { image: Image }) {
 }
 
 export function ImageGallery({ images, isLoading }: ImageGalleryProps) {
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="aspect-square w-full rounded-xl" />
-        ))}
-      </div>
-    );
-  }
-
-  if (images.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/30 h-full min-h-[400px] text-center p-8">
-        <div className="bg-muted rounded-full p-4">
-          <ImageIcon className="w-12 h-12 text-muted-foreground" />
-        </div>
-        <h2 className="mt-6 text-2xl font-semibold">Your creations appear here</h2>
-        <p className="mt-2 text-muted-foreground">
-          Enter a prompt and select a style to start generating images with AI.
-        </p>
-      </div>
-    );
-  }
+  const showEmptyState = !isLoading && images.length === 0;
 
   return (
-    <div className={cn('grid grid-cols-1 sm:grid-cols-2 gap-4 transition-all duration-500', 
-        isLoading ? 'opacity-0' : 'opacity-100'
-    )}>
-      {images.map((image) => (
-        <ImageCard key={image.id} image={image} />
-      ))}
+    <div>
+      {showEmptyState ? (
+         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/30 h-full min-h-[400px] text-center p-8">
+            <div className="bg-muted rounded-full p-4">
+            <ImageIcon className="w-12 h-12 text-muted-foreground" />
+            </div>
+            <h2 className="mt-6 text-2xl font-semibold">Your creations appear here</h2>
+            <p className="mt-2 text-muted-foreground">
+            Enter a prompt and select a style to start generating images with AI.
+            </p>
+        </div>
+      ) : (
+        <div className={cn('grid grid-cols-1 sm:grid-cols-2 gap-4 transition-all duration-500', 
+            isLoading && images.length === 0 ? 'opacity-0' : 'opacity-100'
+        )}>
+          {images.map((image) => (
+            <ImageCard key={image.id} image={image} />
+          ))}
+          {isLoading && Array.from({ length: Math.max(0, 4 - images.length) }).map((_, i) => (
+            <Skeleton key={`skeleton-${i}`} className="aspect-square w-full rounded-xl" />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { Header } from '@/components/header';
 import { PromptForm, type FormValues } from '@/components/prompt-form';
 import { ImageGallery, type Image } from '@/components/image-gallery';
 import { useToast } from '@/hooks/use-toast';
+import { generateImage } from '@/ai/flows/generate-image-flow';
 
 export default function Home() {
   const [images, setImages] = useState<Image[]>([]);
@@ -16,18 +17,18 @@ export default function Home() {
     setImages([]);
 
     try {
-      // Simulate API call for image generation
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      const imagePromises = Array.from({ length: 4 }).map(() => generateImage(data));
 
-      // Create 4 placeholder images
-      const newImages: Image[] = Array.from({ length: 4 }).map((_, i) => ({
-        id: `img-${Date.now()}-${i}`,
-        url: `https://placehold.co/512x512/221a2b/a054ff.png?text=Image+${i + 1}&font=inter`,
-        alt: `${data.style} style image of ${data.prompt}`,
-        hint: `${data.prompt.split(' ').slice(0, 2).join(' ')} ${data.style}`
-      }));
-
-      setImages(newImages);
+      for (const promise of imagePromises) {
+        const result = await promise;
+        const newImage: Image = {
+            id: `img-${Date.now()}-${Math.random()}`,
+            url: result.imageUrl,
+            alt: `${data.style} style image of ${data.prompt}`,
+            hint: `${data.prompt.split(' ').slice(0, 2).join(' ')} ${data.style}`
+        };
+        setImages((prevImages) => [...prevImages, newImage]);
+      }
     } catch (error) {
       toast({
         title: 'Error Generating Images',
