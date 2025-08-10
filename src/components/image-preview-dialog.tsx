@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Download, Copy, Sparkles, Loader2 } from 'lucide-react';
+import { Download, Copy, Sparkles, Loader2, Wand2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -83,7 +83,7 @@ export function ImagePreviewDialog({ image, onClose, onUpscale, onUsePrompt }: I
         <DialogFooter className='sm:justify-between flex-col sm:flex-row gap-2'>
           <div className='flex gap-2 justify-start'>
             <Button variant="outline" onClick={handleUsePrompt}>
-              <Copy className="mr-2 h-4 w-4" /> Use Prompt
+              <Wand2 className="mr-2 h-4 w-4" /> Use Prompt
             </Button>
             <Button variant="outline" onClick={handleCopyPrompt}>
                 <Copy className="mr-2 h-4 w-4" /> Copy Prompt

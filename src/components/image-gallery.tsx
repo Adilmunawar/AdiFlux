@@ -2,7 +2,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Download, Image as ImageIcon, Copy, Expand, Sparkles } from 'lucide-react';
+import { Download, Expand } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -26,10 +26,35 @@ interface ImageGalleryProps {
 }
 
 function ImageCard({ image, index, onSelect }: { image: Image; index: number; onSelect: (image: Image) => void; }) {
+  const { toast } = useToast();
+  
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent the dialog from opening
+    try {
+      const response = await fetch(image.url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `adiflux-${image.id}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      toast({
+        title: 'Download Failed',
+        description: 'Could not download the image. Please try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+  
   return (
     <Card 
       className="overflow-hidden group relative border-2 border-transparent hover:border-primary transition-all duration-300 bg-card/50 animate-fade-in-up"
       style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
+      onClick={() => onSelect(image)}
     >
       <CardContent className="p-0">
         <Image
@@ -39,19 +64,27 @@ function ImageCard({ image, index, onSelect }: { image: Image; index: number; on
           height={512}
           className="aspect-square object-cover w-full transition-transform duration-300 group-hover:scale-105 cursor-pointer"
           data-ai-hint={image.hint}
-          onClick={() => onSelect(image)}
         />
         <div 
-          className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4"
-          onClick={() => onSelect(image)}
+          className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4 gap-2"
         >
             <Button
               variant="secondary"
               size="icon"
               aria-label="Preview image"
+              onClick={() => onSelect(image)}
               className="bg-background/50 hover:bg-background/80 text-foreground scale-90 group-hover:scale-100 transition-transform duration-300"
             >
               <Expand className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="icon"
+              aria-label="Download image"
+              onClick={handleDownload}
+              className="bg-background/50 hover:bg-background/80 text-foreground scale-90 group-hover:scale-100 transition-transform duration-300"
+            >
+              <Download className="h-5 w-5" />
             </Button>
         </div>
       </CardContent>
@@ -81,7 +114,7 @@ export function ImageGallery({ images, isLoading, onUpscale, onUsePrompt }: Imag
         {showEmptyState ? (
            <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/30 h-full min-h-[400px] text-center p-8 bg-card/30">
               <div className="bg-muted/50 rounded-full p-4">
-              <ImageIcon className="w-12 h-12 text-muted-foreground" />
+                <Image className="w-12 h-12 text-muted-foreground" />
               </div>
               <h2 className="mt-6 text-2xl font-semibold">Your creations will appear here</h2>
               <p className="mt-2 text-muted-foreground">
