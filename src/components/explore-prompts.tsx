@@ -11,42 +11,96 @@ interface ExplorePromptsProps {
 }
 
 const examplePrompts = [
-    {
-        title: 'Cybernetic Face-Off',
-        prompt: 'Two futuristic androids face each other in a tense standoff, their metallic bodies illuminated by vibrant pink and blue neon lights in a dark, high-tech cityscape.',
-        imageUrl: '/images/explore/cybernetic-face-off.png',
-        hint: 'cybernetic standoff',
-    },
-    {
-        title: 'Ancient Oasis',
-        prompt: 'A serene oasis at the foot of the great pyramids, with a grand temple entrance and lush palm trees reflecting in the calm, turquoise water.',
-        imageUrl: '/images/explore/ancient-oasis.png',
-        hint: 'ancient oasis',
-    },
-    {
-        title: 'Solar Punk Utopia',
-        prompt: 'A futuristic eco-city where nature and technology coexist in harmony, with buildings covered in lush greenery and powered by solar panels.',
-        imageUrl: '/images/explore/solarpunk-utopia.png',
-        hint: 'solarpunk utopia',
-    },
-    {
-        title: 'Interstellar Nebula',
-        prompt: 'A breathtaking view of a colorful interstellar gas cloud, with newborn stars igniting within its swirling cosmic dust.',
-        imageUrl: '/images/explore/interstellar-nebula.png',
-        hint: 'interstellar nebula',
-    },
-    {
-        title: 'Crystal Desert',
-        prompt: 'A vast desert landscape at sunset, where giant, shimmering crystals erupt from the sandy dunes, catching the last rays of light.',
-        imageUrl: '/images/explore/crystal-desert.png',
-        hint: 'crystal desert',
-    },
-    {
-        title: 'Floating Sky Castle',
-        prompt: 'An majestic castle floating high in the clouds, with waterfalls cascading down its sides into the endless sky below.',
-        imageUrl: '/images/explore/sky-castle.png',
-        hint: 'sky castle',
-    },
+  {
+    title: 'Neon Alleyway',
+    prompt: 'A mysterious neon-lit alleyway at night, with rain-soaked pavement reflecting vibrant city lights and a lone figure in a futuristic coat walking into the distance.',
+    imageUrl: '/images/08edf95ccf8baf7c411679092bdc3b42.jpg',
+    hint: 'neon alleyway',
+  },
+  {
+    title: 'Retro Arcade Dreams',
+    prompt: 'A bustling retro arcade filled with glowing machines, pixel art posters, and kids playing classic games under a haze of colorful lights.',
+    imageUrl: '/images/099f45ecfb8bc5b9be5fde9e8c66ef23.jpg',
+    hint: 'retro arcade',
+  },
+  {
+    title: 'Mystic Forest Path',
+    prompt: 'A winding path through an ancient, misty forest, with towering trees, glowing mushrooms, and magical fireflies lighting the way.',
+    imageUrl: '/images/1f14f87cad85c101c1097b5d13994abb.jpg',
+    hint: 'mystic forest',
+  },
+  {
+    title: 'Desert Mirage',
+    prompt: 'A golden desert landscape with rolling dunes, a distant oasis, and a caravan of camels silhouetted against a blazing sunset.',
+    imageUrl: '/images/1f934ed53a62c8d8974ad629256be26a.jpg',
+    hint: 'desert mirage',
+  },
+  {
+    title: 'Crystal Cavern',
+    prompt: 'A hidden underground cavern filled with giant, glowing crystals in shades of blue and purple, reflecting light onto the cave walls.',
+    imageUrl: '/images/2ce04b936820c857d744bb104acc8fcd.jpg',
+    hint: 'crystal cavern',
+  },
+  {
+    title: 'Skyline at Dusk',
+    prompt: 'A panoramic city skyline at dusk, skyscrapers illuminated by the last rays of sunlight and the first twinkles of city lights.',
+    imageUrl: '/images/36c98b4864e64efca8809578419657c1.jpg',
+    hint: 'city skyline dusk',
+  },
+  {
+    title: 'Cyberpunk Street Market',
+    prompt: 'A vibrant cyberpunk street market with glowing signs, food stalls, and a diverse crowd of futuristic citizens shopping and socializing.',
+    imageUrl: '/images/52964ffddcd0fe602abc4f667b3c2a57.jpg',
+    hint: 'cyberpunk market',
+  },
+  {
+    title: 'Rainy Night Drive',
+    prompt: 'A sleek car driving through a rainy city at night, neon lights streaking across the wet windshield and reflections on the road.',
+    imageUrl: '/images/6de49728e6fa60ca59df98f5fde8b330.jpg',
+    hint: 'rainy night drive',
+  },
+  {
+    title: 'Futuristic Skyline',
+    prompt: 'A futuristic city skyline with towering skyscrapers, flying vehicles, and lush rooftop gardens under a clear blue sky.',
+    imageUrl: '/images/7a628adce35d56c4060c27444577d808.jpg',
+    hint: 'futuristic skyline',
+  },
+  {
+    title: 'Enchanted Waterfall',
+    prompt: 'A magical waterfall cascading into a crystal-clear pool, surrounded by vibrant flowers and glowing butterflies in a hidden valley.',
+    imageUrl: '/images/9de02dd62431f4091bb31fb1d31072f0.jpg',
+    hint: 'enchanted waterfall',
+  },
+  {
+    title: 'Golden Temple',
+    prompt: 'A majestic golden temple rising above a tranquil lake, with lotus flowers floating on the water and mountains in the background.',
+    imageUrl: '/images/a87ed4d74c25528af03277e138a8b531.jpg',
+    hint: 'golden temple',
+  },
+  {
+    title: 'Urban Jungle',
+    prompt: 'A city street overtaken by lush greenery, with vines climbing buildings and wild animals roaming freely among the abandoned cars.',
+    imageUrl: '/images/d86181e00c14354b1712ebd2f4141792.jpg',
+    hint: 'urban jungle',
+  },
+  {
+    title: 'Starlit Beach',
+    prompt: 'A peaceful beach at night, waves gently lapping the shore under a sky filled with stars and the soft glow of bioluminescent sand.',
+    imageUrl: '/images/ebe330c0054d4ca2e9550b2f0fc1e326.jpg',
+    hint: 'starlit beach',
+  },
+  {
+    title: 'Mountain Explorer',
+    prompt: 'A lone explorer standing atop a snowy mountain peak, gazing at the sunrise over a vast range of jagged, snow-capped mountains.',
+    imageUrl: '/images/fa5643aaed41c07405d4a8223d1c05d4.jpg',
+    hint: 'mountain explorer',
+  },
+  {
+    title: 'Sunset Overlook',
+    prompt: 'A breathtaking overlook with a view of rolling hills and a river winding through the valley, bathed in the warm glow of a setting sun.',
+    imageUrl: '/images/fba3519cc7226a3e594290d8eea11c30.jpg',
+    hint: 'sunset overlook',
+  },
 ];
 
 export function ExplorePrompts({ onUsePrompt }: ExplorePromptsProps) {
