@@ -374,4 +374,3 @@ export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPr
     </Card>
   );
 }
-
