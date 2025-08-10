@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -18,19 +19,10 @@ export default function Home() {
 
   const handleGenerate = async (data: FormValues) => {
     setIsLoading(true);
-    const placeholderImages: Image[] = Array.from({ length: 4 }).map((_, i) => ({
-      id: `placeholder-${Date.now()}-${i}`,
-      url: '',
-      prompt: data.prompt,
-      style: data.style,
-      alt: 'loading image',
-      hint: '',
-    }));
-    setImages(placeholderImages);
+    setImages([]); // Clear previous images
 
     try {
       const imagePromises = Array.from({ length: 4 }).map(() => generateImage(data));
-
       const results = await Promise.allSettled(imagePromises);
 
       const newImages: Image[] = [];
@@ -50,8 +42,6 @@ export default function Home() {
             description: `An error occurred while generating one of the images.`,
             variant: 'destructive',
           });
-          // Replace placeholder with a failed state or remove it
-          setImages(prev => prev.filter(img => img.id !== `placeholder-${Date.now()}-${index}`));
         }
       });
       

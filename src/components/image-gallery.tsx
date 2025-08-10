@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -89,12 +90,12 @@ export function ImageGallery({ images, isLoading, onUpscale, onUsePrompt }: Imag
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {images.map((image, index) =>
-              image.url ? (
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, index) => <SkeletonCard key={index} index={index} />)
+            ) : (
+              images.map((image, index) => (
                 <ImageCard key={image.id} image={image} index={index} onSelect={setSelectedImage} />
-              ) : (
-                <SkeletonCard key={image.id} index={index} />
-              )
+              ))
             )}
           </div>
         )}
