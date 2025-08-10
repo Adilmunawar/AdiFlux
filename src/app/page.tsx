@@ -10,6 +10,7 @@ import { generateImage } from '@/ai/flows/generate-image-flow';
 import { ExplorePrompts } from '@/components/explore-prompts';
 import { upscaleImage } from '@/ai/flows/upscale-image-flow';
 import { editImage } from '@/ai/flows/edit-image-flow';
+import { upscalePrompt } from '@/ai/flows/upscale-prompt-flow';
 
 export default function Home() {
   const [images, setImages] = useState<Image[]>([]);
@@ -128,6 +129,21 @@ export default function Home() {
       });
     }
   };
+  
+  const handleUpscalePrompt = async (currentPrompt: string) => {
+    try {
+        const result = await upscalePrompt({ prompt: currentPrompt });
+        setPrompt(result.upscaledPrompt);
+        toast({ title: 'Prompt Upscaled!', description: 'The prompt has been enhanced with more detail.' });
+    } catch(error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        toast({
+            title: 'Error Upscaling Prompt',
+            description: `Something went wrong. Please try again. ${errorMessage}`,
+            variant: 'destructive',
+        });
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -142,6 +158,7 @@ export default function Home() {
             style={style}
             setPrompt={setPrompt}
             setStyle={setStyle}
+            onUpscalePrompt={handleUpscalePrompt}
           />
         </aside>
         <div className="min-w-0">

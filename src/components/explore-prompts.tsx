@@ -8,6 +8,7 @@ import Image from 'next/image';
 interface ExplorePromptsProps {
   onUsePrompt: (prompt: string, style?: string) => void;
 }
+
 const examplePrompts = [
   {
     title: 'Palace of Reflections',

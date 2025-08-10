@@ -26,7 +26,6 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { upscalePrompt } from '@/ai/flows/upscale-prompt-flow';
 import { useEffect, useState, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Switch } from '@/components/ui/switch';
@@ -64,6 +63,7 @@ interface PromptFormProps {
   style: string;
   setPrompt: (prompt: string) => void;
   setStyle: (style: string) => void;
+  onUpscalePrompt: (prompt: string) => Promise<void>;
 }
 
 const defaultArtisticStyles = [
@@ -79,7 +79,7 @@ const defaultArtisticStyles = [
   'Watercolor',
 ];
 
-export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPrompt, setStyle }: PromptFormProps) {
+export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPrompt, setStyle, onUpscalePrompt }: PromptFormProps) {
   const [isUpscaling, setIsUpscaling] = useState(false);
   const [isSuggesting, setIsSuggesting] = useState(false);
   const [activeTab, setActiveTab] = useState('generate');
@@ -128,20 +128,8 @@ export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPr
     }
 
     setIsUpscaling(true);
-    try {
-      const result = await upscalePrompt({ prompt: currentPrompt });
-      form.setValue('prompt', result.upscaledPrompt, { shouldValidate: true });
-      setPrompt(result.upscaledPrompt);
-      toast({ title: 'Prompt Upscaled!', description: 'The prompt has been enhanced with more detail.' });
-    } catch (error) {
-      toast({
-        title: 'Error Upscaling Prompt',
-        description: 'Something went wrong. Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsUpscaling(false);
-    }
+    await onUpscalePrompt(currentPrompt);
+    setIsUpscaling(false);
   };
 
   const handleSuggestStyles = async () => {
@@ -172,8 +160,6 @@ export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPr
   };
   
   const onGenerateSubmit = (data: FormValues) => {
-    setPrompt(data.prompt);
-    setStyle(data.style);
     onGenerate(data);
   };
   
@@ -221,6 +207,10 @@ export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPr
                           rows={5}
                           className="resize-none"
                           {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            setPrompt(e.target.value);
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -256,7 +246,14 @@ export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPr
                           )}
                         </Button>
                       </div>
-                      <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
+                      <Select 
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setStyle(value);
+                        }} 
+                        defaultValue={field.value} 
+                        value={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select a style" />

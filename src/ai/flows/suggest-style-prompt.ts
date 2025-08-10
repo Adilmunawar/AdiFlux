@@ -31,7 +31,6 @@ const prompt = ai.definePrompt({
   name: 'suggestStylePrompt',
   input: {schema: StyleSuggestionInputSchema},
   output: {schema: StyleSuggestionOutputSchema},
-  model: 'googleai/gemini-pro',
   prompt: `You are a creative assistant helping users explore artistic styles for image generation.
 
   Given the following base prompt: "{{basePrompt}}", suggest a list of 10 diverse and interesting artistic styles that would be suitable for generating images from this prompt.
@@ -46,7 +45,13 @@ const suggestStyleFlow = ai.defineFlow(
     outputSchema: StyleSuggestionOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
+    const {output} = await ai.generate({
+        prompt: prompt.compile(input),
+        model: 'googleai/gemini-pro',
+        output: {
+            schema: StyleSuggestionOutputSchema
+        }
+    });
     return output!;
   }
 );

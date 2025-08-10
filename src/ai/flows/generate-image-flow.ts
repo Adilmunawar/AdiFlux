@@ -11,7 +11,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { upscalePrompt } from './upscale-prompt-flow';
 
 const GenerateImageInputSchema = z.object({
   prompt: z.string().describe('The text prompt for image generation.'),
@@ -27,8 +26,7 @@ const GenerateImageOutputSchema = z.object({
 export type GenerateImageOutput = z.infer<typeof GenerateImageOutputSchema>;
 
 export async function generateImage(input: GenerateImageInput): Promise<GenerateImageOutput> {
-  const { upscaledPrompt } = await upscalePrompt({ prompt: input.prompt });
-  return generateImageFlow({...input, prompt: upscaledPrompt});
+  return generateImageFlow(input);
 }
 
 const qualityPrompts = {
