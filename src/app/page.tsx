@@ -14,21 +14,43 @@ export default function Home() {
 
   const handleGenerate = async (data: FormValues) => {
     setIsLoading(true);
-    setImages([]);
+    const placeholderImages: Image[] = Array.from({ length: 4 }).map((_, i) => ({
+      id: `placeholder-${i}`,
+      url: '',
+      alt: 'loading image',
+      hint: '',
+    }));
+    setImages(placeholderImages);
 
     try {
       const imagePromises = Array.from({ length: 4 }).map(() => generateImage(data));
 
-      for (const promise of imagePromises) {
-        const result = await promise;
-        const newImage: Image = {
+      imagePromises.forEach((promise, index) => {
+        promise.then(result => {
+          const newImage: Image = {
             id: `img-${Date.now()}-${Math.random()}`,
             url: result.imageUrl,
             alt: `${data.style} style image of ${data.prompt}`,
             hint: `${data.prompt.split(' ').slice(0, 2).join(' ')} ${data.style}`
-        };
-        setImages((prevImages) => [...prevImages, newImage]);
-      }
+          };
+          
+          setImages(prevImages => {
+            const updatedImages = [...prevImages];
+            updatedImages[index] = newImage;
+            return updatedImages;
+          });
+        }).catch(() => {
+          toast({
+            title: 'Error Generating Image',
+            description: `An error occurred while generating one of the images.`,
+            variant: 'destructive',
+          });
+          setImages(prevImages => prevImages.filter((_, i) => i !== index));
+        });
+      });
+
+      await Promise.allSettled(imagePromises);
+
     } catch (error) {
       toast({
         title: 'Error Generating Images',
