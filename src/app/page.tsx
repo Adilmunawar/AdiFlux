@@ -37,9 +37,10 @@ export default function Home() {
             hint: `${data.prompt.split(' ').slice(0, 2).join(' ')} ${data.style}`
           });
         } else {
+           const errorMessage = result.status === 'rejected' ? (result.reason as Error).message : 'An unknown error occurred.';
           toast({
             title: 'Error Generating Image',
-            description: `An error occurred while generating one of the images.`,
+            description: `An error occurred while generating one of the images: ${errorMessage}`,
             variant: 'destructive',
           });
         }
@@ -48,9 +49,10 @@ export default function Home() {
       setImages(newImages);
 
     } catch (error) {
+       const errorMessage = error instanceof Error ? error.message : String(error);
       toast({
         title: 'Error Generating Images',
-        description: 'Something went wrong. Please try again.',
+        description: `Something went wrong. Please try again. ${errorMessage}`,
         variant: 'destructive',
       });
       setImages([]);
@@ -77,9 +79,10 @@ export default function Home() {
       setImages(prevImages => [upscaledImage, ...prevImages.filter(img => img.id !== image.id)]);
       toast({ title: 'Image Upscaled!', description: 'Your enhanced image has been added to the gallery.' });
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       toast({
         title: 'Error Upscaling Image',
-        description: 'Something went wrong. Please try again.',
+        description: `Something went wrong. Please try again. ${errorMessage}`,
         variant: 'destructive',
       });
     }
