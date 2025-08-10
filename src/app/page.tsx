@@ -7,6 +7,7 @@ import { ImageGallery, type Image } from '@/components/image-gallery';
 import { useToast } from '@/hooks/use-toast';
 import { generateImage } from '@/ai/flows/generate-image-flow';
 import { ExplorePrompts } from '@/components/explore-prompts';
+import { upscaleImage } from '@/ai/flows/upscale-image-flow';
 
 export default function Home() {
   const [images, setImages] = useState<Image[]>([]);
@@ -20,6 +21,8 @@ export default function Home() {
     const placeholderImages: Image[] = Array.from({ length: 4 }).map((_, i) => ({
       id: `placeholder-${Date.now()}-${i}`,
       url: '',
+      prompt: data.prompt,
+      style: data.style,
       alt: 'loading image',
       hint: '',
     }));
@@ -36,6 +39,8 @@ export default function Home() {
           newImages.push({
             id: `img-${Date.now()}-${index}`,
             url: result.value.imageUrl,
+            prompt: data.prompt,
+            style: data.style,
             alt: `${data.style} style image of ${data.prompt}`,
             hint: `${data.prompt.split(' ').slice(0, 2).join(' ')} ${data.style}`
           });
@@ -64,8 +69,30 @@ export default function Home() {
     }
   };
   
-  const handleUsePrompt = (prompt: string) => {
+  const handleUsePrompt = (prompt: string, style?: string) => {
     setPrompt(prompt);
+    if(style) setStyle(style);
+  };
+  
+  const handleUpscale = async (image: Image) => {
+    try {
+      toast({ title: 'Upscaling Image...', description: 'Please wait while we enhance your image.' });
+      const { imageUrl } = await upscaleImage({ imageUrl: image.url });
+      const upscaledImage: Image = {
+        ...image,
+        id: `upscaled-${Date.now()}`,
+        url: imageUrl,
+        alt: `Upscaled: ${image.alt}`,
+      };
+      setImages(prevImages => [upscaledImage, ...prevImages.filter(img => img.id !== image.id)]);
+      toast({ title: 'Image Upscaled!', description: 'Your enhanced image has been added to the gallery.' });
+    } catch (error) {
+      toast({
+        title: 'Error Upscaling Image',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (
@@ -83,7 +110,12 @@ export default function Home() {
           />
         </aside>
         <div className="min-w-0">
-          <ImageGallery images={images} isLoading={isLoading} />
+          <ImageGallery 
+            images={images} 
+            isLoading={isLoading} 
+            onUpscale={handleUpscale} 
+            onUsePrompt={handleUsePrompt} 
+          />
           <ExplorePrompts onUsePrompt={handleUsePrompt} />
         </div>
       </main>

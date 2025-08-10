@@ -1,48 +1,30 @@
 'use client';
 
 import Image from 'next/image';
-import { Download, Image as ImageIcon } from 'lucide-react';
+import { Download, Image as ImageIcon, Copy, Expand, Sparkles } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
+import { useState } from 'react';
+import { ImagePreviewDialog } from './image-preview-dialog';
 
 export interface Image {
   id: string;
   url: string;
   alt: string;
   hint: string;
+  prompt: string;
+  style: string;
 }
 
 interface ImageGalleryProps {
   images: Image[];
   isLoading: boolean;
+  onUpscale: (image: Image) => void;
+  onUsePrompt: (prompt: string, style: string) => void;
 }
 
-function ImageCard({ image, index }: { image: Image; index: number }) {
-  const { toast } = useToast();
-
-  const handleDownload = async () => {
-    try {
-      const response = await fetch(image.url);
-      const blob = await response.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = `imagi-ai-${image.id}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      toast({
-        title: 'Download Failed',
-        description: 'Could not download the image. Please try again.',
-        variant: 'destructive',
-      });
-    }
-  };
-
+function ImageCard({ image, index, onSelect }: { image: Image; index: number; onSelect: (image: Image) => void; }) {
   return (
     <Card 
       className="overflow-hidden group relative border-2 border-transparent hover:border-primary transition-all duration-300 bg-card/50 animate-fade-in-up"
@@ -54,19 +36,22 @@ function ImageCard({ image, index }: { image: Image; index: number }) {
           alt={image.alt}
           width={512}
           height={512}
-          className="aspect-square object-cover w-full transition-transform duration-300 group-hover:scale-105"
+          className="aspect-square object-cover w-full transition-transform duration-300 group-hover:scale-105 cursor-pointer"
           data-ai-hint={image.hint}
+          onClick={() => onSelect(image)}
         />
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
-          <Button
-            variant="secondary"
-            size="icon"
-            onClick={handleDownload}
-            aria-label="Download image"
-            className="bg-background/50 hover:bg-background/80 text-foreground scale-90 group-hover:scale-100 transition-transform duration-300"
-          >
-            <Download className="h-5 w-5" />
-          </Button>
+        <div 
+          className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4"
+          onClick={() => onSelect(image)}
+        >
+            <Button
+              variant="secondary"
+              size="icon"
+              aria-label="Preview image"
+              className="bg-background/50 hover:bg-background/80 text-foreground scale-90 group-hover:scale-100 transition-transform duration-300"
+            >
+              <Expand className="h-5 w-5" />
+            </Button>
         </div>
       </CardContent>
     </Card>
@@ -86,9 +71,10 @@ function SkeletonCard({ index }: { index: number }) {
     );
   }
 
-export function ImageGallery({ images, isLoading }: ImageGalleryProps) {
+export function ImageGallery({ images, isLoading, onUpscale, onUsePrompt }: ImageGalleryProps) {
     const showEmptyState = !isLoading && images.length === 0;
-  
+    const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+
     return (
       <div>
         {showEmptyState ? (
@@ -105,12 +91,20 @@ export function ImageGallery({ images, isLoading }: ImageGalleryProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {images.map((image, index) =>
               image.url ? (
-                <ImageCard key={image.id} image={image} index={index} />
+                <ImageCard key={image.id} image={image} index={index} onSelect={setSelectedImage} />
               ) : (
                 <SkeletonCard key={image.id} index={index} />
               )
             )}
           </div>
+        )}
+        {selectedImage && (
+            <ImagePreviewDialog 
+                image={selectedImage}
+                onClose={() => setSelectedImage(null)}
+                onUpscale={onUpscale}
+                onUsePrompt={onUsePrompt}
+            />
         )}
       </div>
     );
