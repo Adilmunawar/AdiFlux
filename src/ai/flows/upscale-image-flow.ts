@@ -11,8 +11,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import {googleAI} from '@genkit-ai/googleai';
-import {genkit} from 'genkit';
 
 const UpscaleImageInputSchema = z.object({
   imageUrl: z.string().describe("A data URI of the image to upscale. It must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."),
@@ -41,11 +39,7 @@ const upscaleImageFlow = ai.defineFlow(
         {text: 'Upscale this image to a higher resolution, enhancing details and clarity. Make it photorealistic and 8k resolution.'},
       ]
     
-    const customAI = genkit({
-        plugins: [googleAI()],
-    });
-
-    const {media} = await customAI.generate({
+    const {media} = await ai.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
       prompt: finalPrompt,
       config: {
