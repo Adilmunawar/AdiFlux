@@ -32,9 +32,9 @@ const prompt = ai.definePrompt({
   output: {schema: StyleSuggestionOutputSchema},
   prompt: `You are a creative assistant helping users explore artistic styles for image generation.
 
-  Given the following base prompt: "{{basePrompt}}", suggest a list of diverse and interesting artistic styles that would be suitable for generating images from this prompt.
-  Return the styles as a JSON array of strings.  Do not include any descriptions.
-  Example: ["Photorealistic", "Surrealist", "Pop Art", "Abstract Expressionism"]`,
+  Given the following base prompt: "{{basePrompt}}", suggest a list of 10 diverse and interesting artistic styles that would be suitable for generating images from this prompt.
+  Return the styles as a JSON array of strings. Do not include any descriptions or introductory text.
+  Example: ["Photorealistic", "Surrealist", "Pop Art", "Abstract Expressionism", "Cyberpunk", "Vintage Photo", "Fantasy Art", "Minimalist", "Oil Painting", "Watercolor"]`,
 });
 
 const suggestStyleFlow = ai.defineFlow(

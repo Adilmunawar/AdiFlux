@@ -32,6 +32,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from './ui/input';
+import { suggestStyle } from '@/ai/flows/suggest-style-prompt';
 
 const formSchema = z.object({
   prompt: z.string().min(10, {
@@ -65,7 +66,7 @@ interface PromptFormProps {
   setStyle: (style: string) => void;
 }
 
-const artisticStyles = [
+const defaultArtisticStyles = [
   'Photorealistic',
   'Surrealist',
   'Pop Art',
@@ -80,7 +81,9 @@ const artisticStyles = [
 
 export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPrompt, setStyle }: PromptFormProps) {
   const [isUpscaling, setIsUpscaling] = useState(false);
+  const [isSuggesting, setIsSuggesting] = useState(false);
   const [activeTab, setActiveTab] = useState('generate');
+  const [artisticStyles, setArtisticStyles] = useState(defaultArtisticStyles);
   const { toast } = useToast();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -129,6 +132,7 @@ export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPr
       const result = await upscalePrompt({ prompt: currentPrompt });
       form.setValue('prompt', result.upscaledPrompt, { shouldValidate: true });
       setPrompt(result.upscaledPrompt);
+      toast({ title: 'Prompt Upscaled!', description: 'The prompt has been enhanced with more detail.' });
     } catch (error) {
       toast({
         title: 'Error Upscaling Prompt',
@@ -137,6 +141,33 @@ export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPr
       });
     } finally {
       setIsUpscaling(false);
+    }
+  };
+
+  const handleSuggestStyles = async () => {
+    const currentPrompt = form.getValues('prompt');
+     if (!currentPrompt) {
+      toast({
+        title: 'Prompt is empty',
+        description: 'Please enter a prompt to suggest styles for.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsSuggesting(true);
+    try {
+      const { suggestedStyles } = await suggestStyle({ basePrompt: currentPrompt });
+      setArtisticStyles([...new Set([...defaultArtisticStyles, ...suggestedStyles])]);
+      toast({ title: 'Styles Suggested!', description: 'New artistic styles have been added to the dropdown.' });
+    } catch (error) {
+      toast({
+        title: 'Error Suggesting Styles',
+        description: 'Could not fetch style suggestions. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSuggesting(false);
     }
   };
   
@@ -196,12 +227,35 @@ export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPr
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="style"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Artistic Style</FormLabel>
+                      <div className="flex justify-between items-center">
+                        <FormLabel>Artistic Style</FormLabel>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleSuggestStyles}
+                          disabled={isSuggesting || isLoading}
+                          className="text-primary hover:text-primary/90 -mr-2 h-auto px-2 py-1"
+                        >
+                           {isSuggesting ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Suggesting...
+                            </>
+                          ) : (
+                             <>
+                              <Sparkles className="mr-2 h-4 w-4" />
+                              Suggest
+                            </>
+                          )}
+                        </Button>
+                      </div>
                       <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
@@ -220,6 +274,7 @@ export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPr
                     </FormItem>
                   )}
                 />
+
                  <FormField
                   control={form.control}
                   name="quality"
@@ -276,7 +331,7 @@ export function PromptForm({ onGenerate, onEdit, isLoading, prompt, style, setPr
                       </>
                     )}
                   </Button>
-                  <Button type="submit" disabled={isLoading || isUpscaling} className="w-full flex-1">
+                  <Button type="submit" disabled={isLoading || isUpscaling || isSuggesting} className="w-full flex-1">
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

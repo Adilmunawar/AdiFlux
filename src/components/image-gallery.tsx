@@ -2,7 +2,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Download, Expand, ImageIcon } from 'lucide-react';
+import { Download, Expand, ImageIcon, Sparkles, Wand2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -25,7 +25,7 @@ interface ImageGalleryProps {
   onUsePrompt: (prompt: string, style: string) => void;
 }
 
-function ImageCard({ image, index, onSelect }: { image: Image; index: number; onSelect: (image: Image) => void; }) {
+function ImageCard({ image, index, onSelect, onUpscale, onUsePrompt }: { image: Image; index: number; onSelect: (image: Image) => void; onUpscale: (image: Image) => void; onUsePrompt: (prompt: string, style: string) => void; }) {
   const { toast } = useToast();
   
   const handleDownload = async (e: React.MouseEvent) => {
@@ -41,6 +41,7 @@ function ImageCard({ image, index, onSelect }: { image: Image; index: number; on
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
+       toast({ title: 'Download Started', description: 'Your image is downloading.' });
     } catch (error) {
       toast({
         title: 'Download Failed',
@@ -48,6 +49,17 @@ function ImageCard({ image, index, onSelect }: { image: Image; index: number; on
         variant: 'destructive',
       });
     }
+  };
+
+  const handleUpscale = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onUpscale(image);
+  };
+  
+  const handleUsePrompt = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onUsePrompt(image.prompt, image.style);
+    toast({ title: 'Prompt Loaded', description: 'The image prompt and style have been loaded into the form.' });
   };
   
   return (
@@ -66,25 +78,47 @@ function ImageCard({ image, index, onSelect }: { image: Image; index: number; on
           data-ai-hint={image.hint}
         />
         <div 
-          className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4 gap-2"
+          className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4 gap-2"
         >
             <Button
               variant="secondary"
               size="icon"
-              aria-label="Preview image"
-              onClick={() => onSelect(image)}
+              aria-label="Use prompt"
+              title="Use Prompt"
+              onClick={handleUsePrompt}
               className="bg-background/50 hover:bg-background/80 text-foreground scale-90 group-hover:scale-100 transition-transform duration-300"
             >
-              <Expand className="h-5 w-5" />
+              <Wand2 className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="icon"
+              aria-label="Upscale image"
+              title="Upscale Image"
+              onClick={handleUpscale}
+              className="bg-background/50 hover:bg-background/80 text-foreground scale-90 group-hover:scale-100 transition-transform duration-300"
+            >
+              <Sparkles className="h-5 w-5" />
             </Button>
             <Button
               variant="secondary"
               size="icon"
               aria-label="Download image"
+              title="Download Image"
               onClick={handleDownload}
               className="bg-background/50 hover:bg-background/80 text-foreground scale-90 group-hover:scale-100 transition-transform duration-300"
             >
               <Download className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="icon"
+              aria-label="Preview image"
+              title="Preview Image"
+              onClick={() => onSelect(image)}
+              className="bg-background/50 hover:bg-background/80 text-foreground scale-90 group-hover:scale-100 transition-transform duration-300"
+            >
+              <Expand className="h-5 w-5" />
             </Button>
         </div>
       </CardContent>
@@ -127,7 +161,7 @@ export function ImageGallery({ images, isLoading, onUpscale, onUsePrompt }: Imag
               Array.from({ length: 4 }).map((_, index) => <SkeletonCard key={index} index={index} />)
             ) : (
               images.map((image, index) => (
-                <ImageCard key={image.id} image={image} index={index} onSelect={setSelectedImage} />
+                <ImageCard key={image.id} image={image} index={index} onSelect={setSelectedImage} onUpscale={onUpscale} onUsePrompt={onUsePrompt} />
               ))
             )}
           </div>
