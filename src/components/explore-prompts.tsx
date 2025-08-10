@@ -23,12 +23,6 @@ const examplePrompts = [
     hint: 'glowing waterfall cavern',
   },
   {
-    title: 'Serenity at Golden Lake',
-    prompt: 'A tranquil lake glows under the golden hour, surrounded by lush trees and distant mountains, reflecting the warm sunset.',
-    imageUrl: '/Images/0d70bae9ebd1b814092d0ce81af69873.jpg',
-    hint: 'golden lake sunset',
-  },
-  {
     title: 'City in a Globe',
     prompt: 'A miniature, detailed city with towering skyscrapers and intricate highways is encased within a glass globe, held by a majestic stand.',
     imageUrl: '/Images/1f14f87cad85c101c1097b5d13994abb.jpg',
