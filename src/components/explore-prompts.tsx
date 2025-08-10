@@ -13,37 +13,37 @@ const examplePrompts = [
     {
         title: 'Underwater Kingdom',
         prompt: 'Mystical realm beneath the waves with glowing coral and magical creatures',
-        imageUrl: 'https://placehold.co/600x400.png',
+        imageUrl: 'https://storage.googleapis.com/gemini-studio-assets/explore/underwater.jpg',
         hint: 'underwater kingdom',
     },
     {
         title: 'Cyberpunk Metropolis',
         prompt: 'Futuristic cityscape with neon lights and advanced technology',
-        imageUrl: 'https://placehold.co/600x400.png',
+        imageUrl: 'https://storage.googleapis.com/gemini-studio-assets/explore/cyberpunk.jpg',
         hint: 'cyberpunk metropolis',
     },
     {
         title: 'Enchanted Forest',
         prompt: 'Ancient woodland with mystical creatures and magical atmosphere',
-        imageUrl: 'https://placehold.co/600x400.png',
+        imageUrl: 'https://storage.googleapis.com/gemini-studio-assets/explore/forest.jpg',
         hint: 'enchanted forest',
     },
     {
         title: 'Steampunk City',
         prompt: 'A bustling city powered by steam, with intricate clockwork mechanisms and Victorian-era fashion.',
-        imageUrl: 'https://placehold.co/600x400.png',
+        imageUrl: 'https://storage.googleapis.com/gemini-studio-assets/explore/steampunk.jpg',
         hint: 'steampunk city',
     },
     {
         title: 'Cosmic Dream',
         prompt: 'A surreal landscape of swirling nebulae, distant galaxies, and floating crystalline structures.',
-        imageUrl: 'https://placehold.co/600x400.png',
+        imageUrl: 'https://storage.googleapis.com/gemini-studio-assets/explore/cosmic.jpg',
         hint: 'cosmic dream',
     },
     {
         title: 'Forgotten Temple',
         prompt: 'An ancient jungle temple, overgrown with vines, with mysterious symbols carved into its stone walls.',
-        imageUrl: 'https://placehold.co/600x400.png',
+        imageUrl: 'https://storage.googleapis.com/gemini-studio-assets/explore/temple.jpg',
         hint: 'forgotten temple',
     },
 ];
