@@ -4,7 +4,6 @@
 /node_modules
 /.pnp
 .pnp.js
-.pnp.cjs
 
 # testing
 /coverage
@@ -32,7 +31,15 @@ pnpm-debug.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+tsconfig.tsbuildinfo
 
-# User-specific files
+# user-specific files
+.idea
+.vscode
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Adiflux specific
 src/ai/keys.ts
