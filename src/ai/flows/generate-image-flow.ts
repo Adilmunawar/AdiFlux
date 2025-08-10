@@ -75,4 +75,3 @@ const generateImageFlow = ai.defineFlow(
     return {imageUrl: media.url};
   }
 );
-

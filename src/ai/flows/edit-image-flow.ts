@@ -12,6 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
+import {genkit} from 'genkit';
 
 const EditImageInputSchema = z.object({
   prompt: z.string().describe('The text prompt describing the desired edits.'),
@@ -41,7 +42,6 @@ const editImageFlow = ai.defineFlow(
         {text: prompt},
     ];
     
-    // For simplicity, edit also uses the primary key. If needed, this could also use the pool.
     const customAI = genkit({
         plugins: [googleAI()],
     });

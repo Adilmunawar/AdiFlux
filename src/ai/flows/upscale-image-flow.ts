@@ -41,7 +41,6 @@ const upscaleImageFlow = ai.defineFlow(
         {text: 'Upscale this image to a higher resolution, enhancing details and clarity. Make it photorealistic and 8k resolution.'},
       ]
     
-    // For simplicity, upscale also uses the primary key. If needed, this could also use the pool.
     const customAI = genkit({
         plugins: [googleAI()],
     });
