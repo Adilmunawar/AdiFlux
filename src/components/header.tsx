@@ -1,4 +1,5 @@
 import { Logo } from "@/components/icons";
+import { ThemeToggle } from "./theme-toggle";
 
 export function Header() {
   return (
@@ -9,6 +10,7 @@ export function Header() {
           <h1 className="text-xl font-bold text-foreground">Adiflux</h1>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
+          <ThemeToggle />
         </div>
       </div>
     </header>
