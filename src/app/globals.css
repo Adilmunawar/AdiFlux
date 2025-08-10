@@ -68,4 +68,24 @@ body {
       transform: translateY(0);
     }
   }
+
+  /* Custom scrollbar styles */
+  textarea::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  textarea::-webkit-scrollbar-track {
+    background-color: hsl(var(--background));
+    border-radius: 10px;
+  }
+
+  textarea::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted));
+    border-radius: 10px;
+    border: 2px solid hsl(var(--background));
+  }
+
+  textarea::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--primary) / 0.7);
+  }
 }
