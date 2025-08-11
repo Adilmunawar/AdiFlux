@@ -48,8 +48,7 @@ const upscalePromptFlow = ai.defineFlow(
   },
   async (input) => {
     const {output} = await ai.generate({
-        prompt: upscalePromptDefinition,
-        input: input,
+        prompt: await upscalePromptDefinition(input),
         model: 'googleai/gemini-pro',
         output: {
             schema: UpscalePromptOutputSchema

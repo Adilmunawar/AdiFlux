@@ -47,8 +47,7 @@ const suggestStyleFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await ai.generate({
-        prompt: suggestStyleDefinition,
-        input: input,
+        prompt: await suggestStyleDefinition(input),
         model: 'googleai/gemini-pro',
         output: {
             schema: StyleSuggestionOutputSchema
