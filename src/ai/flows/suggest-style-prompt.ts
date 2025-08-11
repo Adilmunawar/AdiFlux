@@ -28,7 +28,7 @@ export async function suggestStyle(input: StyleSuggestionInput): Promise<StyleSu
   return suggestStyleFlow(input);
 }
 
-const prompt = ai.definePrompt({
+const suggestStyleDefinition = ai.definePrompt({
   name: 'suggestStylePrompt',
   input: {schema: StyleSuggestionInputSchema},
   output: {schema: StyleSuggestionOutputSchema},
@@ -47,7 +47,8 @@ const suggestStyleFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await ai.generate({
-        prompt: prompt.compile(input),
+        prompt: suggestStyleDefinition,
+        input: input,
         model: 'googleai/gemini-pro',
         output: {
             schema: StyleSuggestionOutputSchema
