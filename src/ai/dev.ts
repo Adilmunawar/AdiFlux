@@ -2,7 +2,7 @@
 import { config } from 'dotenv';
 config();
 
-import './keys.ts';
+import './keys';
 import '@/ai/flows/suggest-style-prompt';
 import '@/ai/flows/generate-image-flow';
 import '@/ai/flows/upscale-prompt-flow';
