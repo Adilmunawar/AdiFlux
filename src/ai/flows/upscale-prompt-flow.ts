@@ -11,7 +11,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { getNextKey } from '../keys';
+import { getNextKey } from '@/ai/keys';
 
 const UpscalePromptInputSchema = z.object({
   prompt: z.string().describe('The user-provided prompt to be upscaled.'),

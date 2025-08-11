@@ -11,7 +11,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { getNextKey } from '../keys';
+import { getNextKey } from '@/ai/keys';
 
 const StyleSuggestionInputSchema = z.object({
   basePrompt: z.string().describe('The base prompt for image generation.'),

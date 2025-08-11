@@ -12,7 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { upscalePrompt } from './upscale-prompt-flow';
-import { getNextKey } from '../keys';
+import { getNextKey } from '@/ai/keys';
 
 const GenerateImageInputSchema = z.object({
   prompt: z.string().describe('The text prompt for image generation.'),
