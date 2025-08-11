@@ -37,10 +37,6 @@ const suggestStyleDefinition = ai.definePrompt({
   Given the following base prompt: "{{basePrompt}}", suggest a list of 10 diverse and interesting artistic styles that would be suitable for generating images from this prompt.
   Return the styles as a JSON array of strings. Do not include any descriptions or introductory text.
   Example: ["Photorealistic", "Surrealist", "Pop Art", "Abstract Expressionism", "Cyberpunk", "Vintage Photo", "Fantasy Art", "Minimalist", "Oil Painting", "Watercolor"]`,
-  model: 'googleai/gemini-pro',
-  auth: {
-      apiKey: getNextKey(),
-  }
 });
 
 const suggestStyleFlow = ai.defineFlow(
@@ -50,7 +46,16 @@ const suggestStyleFlow = ai.defineFlow(
     outputSchema: StyleSuggestionOutputSchema,
   },
   async input => {
-    const {output} = await suggestStyleDefinition(input);
+    const {output} = await ai.generate({
+      prompt: await suggestStyleDefinition(input),
+      model: 'googleai/gemini-pro',
+      output: {
+        schema: StyleSuggestionOutputSchema
+      },
+      auth: {
+        apiKey: await getNextKey(),
+      },
+    });
     return output!;
   }
 );

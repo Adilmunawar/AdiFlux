@@ -38,10 +38,6 @@ const upscalePromptDefinition = ai.definePrompt({
 
   User Prompt: "{{prompt}}"
   `,
-  model: 'googleai/gemini-pro',
-  auth: {
-      apiKey: getNextKey(),
-  }
 });
 
 const upscalePromptFlow = ai.defineFlow(
@@ -51,7 +47,16 @@ const upscalePromptFlow = ai.defineFlow(
     outputSchema: UpscalePromptOutputSchema,
   },
   async (input) => {
-    const {output} = await upscalePromptDefinition(input);
+    const {output} = await ai.generate({
+        prompt: await upscalePromptDefinition(input),
+        model: 'googleai/gemini-pro',
+        output: {
+            schema: UpscalePromptOutputSchema
+        },
+        auth: {
+            apiKey: await getNextKey(),
+        },
+    });
     return output!;
   }
 );
