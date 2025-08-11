@@ -1,5 +1,4 @@
 
-// src/ai/flows/suggest-style-prompt.ts
 'use server';
 
 /**
@@ -36,7 +35,7 @@ const suggestStyleFlow = ai.defineFlow(
   },
   async ({ basePrompt }) => {
     const {output} = await ai.generate({
-      model: 'googleai/gemini-pro',
+      model: 'googleai/gemini-1.5-flash-latest',
       prompt: `You are a creative assistant helping users explore artistic styles for image generation.
 
   Given the following base prompt: "${basePrompt}", suggest a list of 10 diverse and interesting artistic styles that would be suitable for generating images from this prompt.
