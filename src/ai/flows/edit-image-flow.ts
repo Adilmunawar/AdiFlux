@@ -11,7 +11,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { getNextKey } from '@/ai/keys';
+import { getNextKey } from '../keys';
 
 const EditImageInputSchema = z.object({
   prompt: z.string().describe('The text prompt describing the desired edits.'),
