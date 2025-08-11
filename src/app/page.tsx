@@ -39,9 +39,8 @@ export default function Home() {
             hint: `${data.prompt.split(' ').slice(0, 2).join(' ')} ${data.style}`
           });
         } else {
-           // Correctly handle the error message from the rejected promise.
            const errorMessage = result.status === 'rejected' ? String(result.reason) : 'An unknown error occurred.';
-           console.error(`Error generating image ${index + 1}:`, result.reason);
+           console.error(`Error generating image ${index + 1}:`, errorMessage);
            toast({
             title: 'Error Generating Image',
             description: `An error occurred while generating one of the images: ${errorMessage}`,
