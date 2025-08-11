@@ -28,27 +28,20 @@ export async function suggestStyle(input: StyleSuggestionInput): Promise<StyleSu
   return suggestStyleFlow(input);
 }
 
-const suggestStyleDefinition = ai.definePrompt({
-  name: 'suggestStylePrompt',
-  input: {schema: StyleSuggestionInputSchema},
-  output: {schema: StyleSuggestionOutputSchema},
-  prompt: `You are a creative assistant helping users explore artistic styles for image generation.
-
-  Given the following base prompt: "{{basePrompt}}", suggest a list of 10 diverse and interesting artistic styles that would be suitable for generating images from this prompt.
-  Return the styles as a JSON array of strings. Do not include any descriptions or introductory text.
-  Example: ["Photorealistic", "Surrealist", "Pop Art", "Abstract Expressionism", "Cyberpunk", "Vintage Photo", "Fantasy Art", "Minimalist", "Oil Painting", "Watercolor"]`,
-});
-
 const suggestStyleFlow = ai.defineFlow(
   {
     name: 'suggestStyleFlow',
     inputSchema: StyleSuggestionInputSchema,
     outputSchema: StyleSuggestionOutputSchema,
   },
-  async input => {
+  async ({ basePrompt }) => {
     const {output} = await ai.generate({
-      prompt: await suggestStyleDefinition(input),
       model: 'googleai/gemini-pro',
+      prompt: `You are a creative assistant helping users explore artistic styles for image generation.
+
+  Given the following base prompt: "${basePrompt}", suggest a list of 10 diverse and interesting artistic styles that would be suitable for generating images from this prompt.
+  Return the styles as a JSON array of strings. Do not include any descriptions or introductory text.
+  Example: ["Photorealistic", "Surrealist", "Pop Art", "Abstract Expressionism", "Cyberpunk", "Vintage Photo", "Fantasy Art", "Minimalist", "Oil Painting", "Watercolor"]`,
       output: {
         schema: StyleSuggestionOutputSchema
       },

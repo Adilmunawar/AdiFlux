@@ -27,29 +27,22 @@ export async function upscalePrompt(input: UpscalePromptInput): Promise<UpscaleP
   return upscalePromptFlow(input);
 }
 
-const upscalePromptDefinition = ai.definePrompt({
-  name: 'upscalePrompt',
-  input: {schema: UpscalePromptInputSchema},
-  output: {schema: UpscalePromptOutputSchema},
-  prompt: `You are an expert prompt engineer for a text-to-image model. 
-  Your task is to take a user's simple prompt and expand it into a rich, detailed, and vivid description that will result in a stunning and high-quality image.
-  Focus on adding details about the scene, lighting, composition, and artistic style.
-  Return only the upscaled prompt text.
-
-  User Prompt: "{{prompt}}"
-  `,
-});
-
 const upscalePromptFlow = ai.defineFlow(
   {
     name: 'upscalePromptFlow',
     inputSchema: UpscalePromptInputSchema,
     outputSchema: UpscalePromptOutputSchema,
   },
-  async (input) => {
+  async ({ prompt }) => {
     const {output} = await ai.generate({
-        prompt: await upscalePromptDefinition(input),
         model: 'googleai/gemini-pro',
+        prompt: `You are an expert prompt engineer for a text-to-image model. 
+  Your task is to take a user's simple prompt and expand it into a rich, detailed, and vivid description that will result in a stunning and high-quality image.
+  Focus on adding details about the scene, lighting, composition, and artistic style.
+  Return only the upscaled prompt text.
+
+  User Prompt: "${prompt}"
+  `,
         output: {
             schema: UpscalePromptOutputSchema
         },
