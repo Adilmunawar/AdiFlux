@@ -21,9 +21,9 @@ export default function Home() {
 
   const handleGenerate = async (data: FormValues) => {
     setIsLoading(true);
-    setImages([]); // Clear previous images
+    setImages([]);
 
-    try {
+    const generateImageGrid = async (): Promise<Image[]> => {
       const imagePromises = Array.from({ length: 4 }).map(() => generateImage(data));
       const results = await Promise.allSettled(imagePromises);
 
@@ -43,20 +43,23 @@ export default function Home() {
            console.error(`Error generating image ${index + 1}:`, errorMessage);
            toast({
             title: 'Error Generating Image',
-            description: `An error occurred while generating one of the images: ${errorMessage}`,
+            description: `An error occurred while generating one of the images. Please try again.`,
             variant: 'destructive',
           });
         }
       });
-      
-      setImages(newImages);
+      return newImages;
+    };
 
+    try {
+      const newImages = await generateImageGrid();
+      setImages(newImages);
     } catch (error) {
        const errorMessage = error instanceof Error ? error.message : String(error);
        console.error('An unexpected error occurred in handleGenerate:', error);
        toast({
         title: 'Error Generating Images',
-        description: `Something went wrong. Please try again. ${errorMessage}`,
+        description: `Something went wrong. Please try again.`,
         variant: 'destructive',
       });
       setImages([]);
