@@ -12,7 +12,6 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { upscalePrompt } from './upscale-prompt-flow';
-import { getNextKey } from '../keys';
 
 const GenerateImageInputSchema = z.object({
   prompt: z.string().describe('The text prompt for image generation.'),
@@ -66,9 +65,6 @@ const generateImageFlow = ai.defineFlow(
       config: {
         responseModalities: ['TEXT', 'IMAGE'],
       },
-      auth: {
-        apiKey: await getNextKey(),
-      }
     });
 
     if (!media || !media.url) {

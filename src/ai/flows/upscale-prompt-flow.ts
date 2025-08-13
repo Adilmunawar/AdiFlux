@@ -11,7 +11,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { getNextKey } from '../keys';
 
 const UpscalePromptInputSchema = z.object({
   prompt: z.string().describe('The user-provided prompt to be upscaled.'),
@@ -45,9 +44,6 @@ const upscalePromptFlow = ai.defineFlow(
   `,
         output: {
             schema: UpscalePromptOutputSchema
-        },
-        auth: {
-            apiKey: await getNextKey(),
         },
     });
     return output!;

@@ -2,9 +2,10 @@
 import { config } from 'dotenv';
 config();
 
-import './keys';
-import '@/ai/flows/suggest-style-prompt';
-import '@/ai/flows/generate-image-flow';
-import '@/ai/flows/upscale-prompt-flow';
-import '@/ai/flows/upscale-image-flow';
-import '@/ai/flows/edit-image-flow';
+// This file is used for local development only.
+// It is not needed for the production build.
+import './flows/suggest-style-prompt';
+import './flows/generate-image-flow';
+import './flows/upscale-prompt-flow';
+import './flows/upscale-image-flow';
+import './flows/edit-image-flow';

@@ -11,7 +11,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { getNextKey } from '../keys';
 
 const StyleSuggestionInputSchema = z.object({
   basePrompt: z.string().describe('The base prompt for image generation.'),
@@ -43,9 +42,6 @@ const suggestStyleFlow = ai.defineFlow(
   Example: ["Photorealistic", "Surrealist", "Pop Art", "Abstract Expressionism", "Cyberpunk", "Vintage Photo", "Fantasy Art", "Minimalist", "Oil Painting", "Watercolor"]`,
       output: {
         schema: StyleSuggestionOutputSchema
-      },
-      auth: {
-        apiKey: await getNextKey(),
       },
     });
     return output!;
